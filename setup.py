@@ -3,7 +3,7 @@ from setuptools import setup
 setup(name='physique',
       version='0.1',
       description='Librairie pour les sciences physiques',
-      url='http://github.com/david-therincourt/physique',
+      url='',
       author='David THERINCOURT',
       author_email='dtherincourt@gmail.com',
       license='MIT',
