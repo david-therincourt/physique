@@ -1,11 +1,22 @@
-from setuptools import setup
+import setuptools
 
-setup(name='physique',
-      version='0.2',
-      description='Librairie pour les sciences physiques',
-      url='https://github.com/david-therincourt/physique',
-      author='David THERINCOURT',
-      author_email='dtherincourt@gmail.com',
-      license='MIT',
-      packages=['physique'],
-      zip_safe=False)
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+setuptools.setup(
+    name="physique", # Replace with your own username
+    version="0.2.2",
+    author="David THERINCOURT",
+    author_email="dtherincourt@gmail.com",
+    description="Librairie pour les sciences physiques",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/david-therincourt/physique",
+    packages=setuptools.find_packages(),
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
+    python_requires='>=3.6',
+)

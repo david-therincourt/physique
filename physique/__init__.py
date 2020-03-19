@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Module Python 3 pour les sciences physiques au lycée.
+Bibliothèque Python 3 pour les sciences physiques au lycée.
 
 @author: David Thérincourt
 """
@@ -125,10 +125,30 @@ def ajustement_parabolique(x, y) :
     return np.polyfit(x, y, 2)
 
 
-
-def ajustement_exp1(x, y, A_p0=1, tau_p0=1, x0_p0=0) :
+def ajustement_exp1(x, y, A_p0=1, tau_p0=1) :
     """
-    Modélisation d'une série de points (x,y) par une fonction exponentielle croissante du type y = A*(1-exp(-(x-xo)/tau))
+    Modélisation d'une série de points (x,y) par une fonction exponentielle croissante
+    du type y = A*(1-exp(-x/tau))
+    
+    Paramètres :
+    x (liste ou tableau Numpy) : abscisses.
+    y (liste ou tableau Numpy de même dimension que x) : ordonnées.
+    
+    Paramètres optionnels :
+    A_p0 (1 par défaut) : valeur de la limite à l'infini aidant à la convergence du modèle.
+    tau_p0 (1 par défaut) : valeur de la constante de temps aidant à la convergence du modèle.
+        
+    Retourne un tuple (A, tau, x0) :
+    A (float)  : limite à l'infini.
+    tau (float) : constante de temps.
+    """
+    (A,tau), pcov = curve_fit(exp1,x,y, p0=[A_p0, tau_p0])
+    return A, tau
+
+def ajustement_exp1_x0(x, y, A_p0=1, tau_p0=1, x0_p0=0) :
+    """
+    Modélisation d'une série de points (x,y) par une fonction exponentielle croissante
+    décalée suivant l'abscisse du type y = A*(1-exp(-(x-xo)/tau))
     
     Paramètres :
     x (liste ou tableau Numpy) : abscisses.
@@ -149,9 +169,9 @@ def ajustement_exp1(x, y, A_p0=1, tau_p0=1, x0_p0=0) :
 
 
 
-def ajustement_exp2(x, y, A_p0=1, tau_p0=1, x0_p0=0) :
+def ajustement_exp2(x, y, A_p0=1, tau_p0=1) :
     """
-    Modélisation d'une série de points (x,y) par une fonction exponentielle croissante du type y = A*(1-exp(-(x-xo)/tau))
+    Modélisation d'une série de points (x,y) par une fonction exponentielle croissante du type y = A*(1-exp(x-/tau))
     
     Paramètres :
     x (liste ou tableau Numpy) : abscisses.
@@ -160,12 +180,35 @@ def ajustement_exp2(x, y, A_p0=1, tau_p0=1, x0_p0=0) :
     Paramètres optionnels :
     A_p0 (1 par défaut) : valeur de la limite à l'infini aidant à la convergence du modèle.
     tau_p0 (1 par défaut) : valeur de la constante de temps aidant à la convergence du modèle.
-    x0_p0 (0 par défaut) : valeur du retard aidant à la convergence du modèle.
         
     Retourne un tuple (A, tau, x0) :
     A (float)  : limite à l'infini.
     tau (float) : constante de temps.
     x0 (float) : retard.
     """
-    (A,tau,x0), pcov = curve_fit(exp2,x,y, p0=[A_p0, tau_p0, x0_p0])
+    (A,tau), pcov = curve_fit(exp2, x, y, p0=[A_p0, tau_p0])
+    return A, tau
+
+def ajustement_exp2_x0(x, y, A_p0=1, tau_p0=1, x0_p0=1) :
+    """
+    Modélisation d'une série de points (x,y) par une fonction exponentielle croissante du type y = A*(1-exp(x-/tau))
+    
+    Paramètres :
+    x (liste ou tableau Numpy) : abscisses.
+    y (liste ou tableau Numpy de même dimension que x) : ordonnées.
+    
+    Paramètres optionnels :
+    A_p0 (1 par défaut) : valeur de la limite à l'infini aidant à la convergence du modèle.
+    tau_p0 (1 par défaut) : valeur de la constante de temps aidant à la convergence du modèle.
+        
+    Retourne un tuple (A, tau, x0) :
+    A (float)  : limite à l'infini.
+    tau (float) : constante de temps.
+    x0 (float) : retard.
+    """
+    (A,tau, x0), pcov = curve_fit(exp2, x, y, p0=[A_p0, tau_p0, x0_p0])
     return A, tau, x0
+
+#--------------------------------------
+# Importation de données
+#--------------------------------------
