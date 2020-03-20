@@ -8,6 +8,8 @@ Bibliothèque Python 3 pour les sciences physiques au lycée.
 import numpy as np
 from scipy.stats import linregress
 from scipy.optimize import curve_fit
+from io import StringIO
+
 
 #--------------------------
 # Fonctions mathématiques
@@ -212,3 +214,65 @@ def ajustement_exp2_x0(x, y, A_p0=1, tau_p0=1, x0_p0=1) :
 #--------------------------------------
 # Importation de données
 #--------------------------------------
+    
+def normaliseFichier(fichier, encodage = 'utf-8') :
+    """
+    Normalise les séparateurs décimaux dans un fichier CSV en remplaçant les virgules par des points.
+    """
+    f = open(fichier,'r', encoding = encodage) 
+    data = f.read()
+    f.close()
+    return StringIO(data.replace(",","."))
+
+def importAvimeca3(fichier, sep = '\t') :
+    """
+    Importe des données au format CSV à partir du logiciel AviMéca 3
+    
+    Paramètre :
+        fichier : nom du fichier CSV
+    
+    Paramètre optionnel :
+        sep : caractère de séparation des colonnes de données (tabulation '\t' par défaut)
+    
+    Retourne :
+        un tuple de tableaux Numpy
+    """
+    data = normaliseFichier(fichier, encodage = 'iso-8859-1')
+    return np.genfromtxt(data, delimiter = sep, unpack = True, skip_header = 3, comments = '#')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
