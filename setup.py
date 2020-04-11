@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.2.2",
     author="David THERINCOURT",
     author_email="dtherincourt@gmail.com",
-    description="Librairie pour les sciences physiques",
+    description="Librairie Python pour les sciences physiques",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/david-therincourt/physique",
