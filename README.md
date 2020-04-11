@@ -2,7 +2,7 @@
 
 ## Installation
 
-### Avec PyPi
+### Avec des dépôts de PyPi
 
 Lancer dans un terminal :
 
@@ -20,7 +20,7 @@ Dans une console Python dans le même répertoire que l'archive et lancer la com
 
 ### Le module `modélisation`
 
-Collection de fonction pour réaliser une modélisation d'une courbe du type `y=f(x)`.
+Fonctions pour réaliser une modélisation d'une courbe du type `y=f(x)`.
 
 #### Fonctions disponibles
 
@@ -28,11 +28,11 @@ Collection de fonction pour réaliser une modélisation d'une courbe du type `y=
 | ------------------------------ | -------------------- | ---------------------------- |
 | ` ajustement_lineaire(x, y)`   | `a`                  | `y=ax​`                       |
 | `ajustement_affine(x, y)`      | `a`  et `b`          | `y=ax+b​`                     |
-| `ajustement_parabolique(x, y)` | `a` , `b` et  `c`    | $y=a x^2+bx+c$               |
+| `ajustement_parabolique(x, y)` | `a` , `b` et  `c`    | `y=a x^2+bx+c​`               |
 | `ajustement_exp1(x, y)`        | `A`  et `tau`        | `y = A*(1-exp(-x/tau))`      |
 | `ajustement_exp1_x0(x, y)`     | `A` , `tau` et  `x0` | `y = A*(1-exp(-(x-x0)/tau))` |
 | `ajustement_exp2(x, y)`        | `A`  et `tau`        | `y = A*exp(-x/tau)`          |
-| `ajustement_exp2_x0(x, y) `    | `A` , `tau` et  `x0` | = A*exp(-(x-x0)/tau)         |
+| `ajustement_exp2_x0(x, y) `    | `A` , `tau` et  `x0` | `y = A*exp(-(x-x0)/tau)`     |
 
 #### Exemple
 
@@ -56,3 +56,5 @@ plt.show()
 ```
 
 ### Le module `CSV`
+
+...
