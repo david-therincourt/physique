@@ -18,7 +18,7 @@ Dans une console Python dans le même répertoire que l'archive et lancer la com
 
 ## Utilisation
 
-### Le module `modélisation`
+### Le module `modelisation`
 
 Fonctions pour réaliser une modélisation d'une courbe du type `y=f(x)`.
 
@@ -57,4 +57,68 @@ plt.show()
 
 ### Le module `CSV`
 
-...
+Modules d'importation de tableau de données au format CSV à partir des logiciels Aviméca3, Regavi, ...
+
+#### Fonctions disponibles
+
+* `importAvimeca3(fichier)`  ou `importAvimeca3(fichier, sep=';')`
+* `importRegavi(fichier)`  ou `importRegavi(fichier, sep=';')` 
+
+Le paramètre `sep` (séparateur de données) est optionnel. La tabulation (`sep='\t'`) est le séparateur par défaut.
+
+#### Exemple
+
+```python
+import matplotlib.pyplot as plt
+from physique.csv import importAvimeca3
+
+t, x, y = importAvimeca3('data.txt') # séparateur = tabulation
+
+plt.plot(x,y,'.')
+plt.show()
+```
+
+Le fichier ` data.txt` est obtenu par l'exportation de données au format CSV dans le locigiel Aviméca3.
+
+### Le module ` micropythontools`
+
+Module de pilotage d'une carte microcontrôleur (PyBoard, ESP32, Micro:bit, ...) fonctionnant sous micropython à partir d'un ordinateur sous Python par le port série (USB, Bluetooth, ...)
+
+#### Fonctions disponibles
+
+* `execFileOnBoard(nomFichier, portSerie)`
+
+  Cette fonction exécute un programme Micropython (enregistré sur l'ordianteur) sur le microcontrôleur. Elle retourne un tuple envoyé par une fonction `print(tuple)`  placée dans le programme Micropython.
+
+* `execFileOnBoardToStr(nomFichier, portSerie) `
+
+  Idem que la fonction précédent mais renvoie la chaine de caratères envoyé par une fonction `print(str)`  placée dans le programme Micropython.
+
+#### Exemple
+
+Programme MicroPython `read_adc.py` pour carte PyBoard (lecture sur entrée analogique) :
+
+```python
+from pyb import Pin, ADC
+from time import sleep_ms
+adc = ADC(Pin('X1'))     # Broche X1 en entrée analogique
+x, y = [], []            # Tableaux vides au départ
+for i in range(10):      # Mesures
+    x.append(i)
+    y.append(adc.read()) # Lecture sur CAN
+    sleep_ms(500)        # attendre 500 ms
+data = x, y              # Tuple de données
+print(data)              # Envoie des données
+```
+
+Programme Python sur l'ordinateur dans le même répertoire que le programme MicroPython :
+
+```python
+import matplotlib.pyplot as plt
+from physique.micropythontools import execFileOnBoard
+x, y = execFileOnBoard("read_adc.py", "COM6") # Exécution du script MicroPython
+plt.plot(x,y,'r.')
+plt.ylim(0,5000)
+plt.show()
+```
+

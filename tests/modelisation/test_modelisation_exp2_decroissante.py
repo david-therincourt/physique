@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun May 26 15:46:31 2019
-exec(open("tests/modelisation/test_modelisation_exp2_decroissante.py").read())
 @author: david
 """
 

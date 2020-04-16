@@ -11,14 +11,14 @@ Modules disponibles de la librairie (package)) physique :
     Importation et exportation de données au format CSV pour Avimeca3, ...
     Exemple :
     >>> from physique.csv import importAvimeca3
-- micropython
+- micropythontools
     Exécution d'un programme MicroPython sur un microcontrôleur (Micro:bit, Pyboard, ESP32, ...) à partir d'un ordinateur par le port série (mode REPL RAW)
     Exemple :
-    >>> from physique.micropython import execFichier
+    >>> from physique.micropythontools import execFileOnBoard
 
 @author: David Thérincourt - 2020
 """
 
 import physique.modelisation
 import physique.csv
-import physique.micropython
+import physique.micropythontools

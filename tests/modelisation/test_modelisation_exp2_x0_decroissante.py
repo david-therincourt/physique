@@ -2,9 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun May 26 15:46:31 2019
-exec(open("tests/modelisation/test_modelisation_exp2_x0_decroissante.py").read())
 @author: david
-Ne fonctionne pas bien pour x0 !!!
+Ne fonctionne pas bien pour x0 car une infinité de solution en fonction de A
 """
 
 import numpy as np
@@ -21,7 +20,7 @@ print(A, tau, x0)
 # Tracé du modèle
 x_mod = np.linspace(0,20,50)
 y_mod = exp2(x_mod,A,tau,x0)
-#y_reel = exp2(x_mod,5,3,0)
+
 
 plt.plot(x_mod, y_mod, '-')
 #plt.plot(x_mod, y_reel, 'r-')
