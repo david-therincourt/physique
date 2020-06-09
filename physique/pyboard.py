@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
+# David THERINCOURT - 2020
 #
-# This file is part of the MicroPython project, http://micropython.org/
+# This file is a modification of the original pyboard.py edit by  MicroPython project, http://micropython.org/
 #
 # The MIT License (MIT)
 #
@@ -54,22 +54,13 @@ Then:
 Note: if using Python2 then pyb.exec must be written as pyb.exec_.
 To run a script from the local machine on the board and print out the results:
 
-    import pyboard
-    pyboard.execfile('test.py', device='/dev/ttyACM0')
-
-This script can also be run directly.  To execute a local script, use:
-
-    ./pyboard.py test.py
-
-Or:
-
-    python pyboard.py test.py
 
 """
 
 import sys
 import time
 import os
+from io import StringIO
 
 try:
     stdout = sys.stdout.buffer
@@ -454,224 +445,76 @@ class Pyboard:
     def fs_rm(self, src):
         self.exec_("import uos\nuos.remove('%s')" % src)
 
+    def execFile(self, fileName):
+        """
+        Exécute un programme MicroPython à partir d'un ordinateur sur un microcontrôleur (avec le firmware MicroPython) par le port série en mode REPL RAW.
+        La fonction retourne une chaine de caractères transmise par une fonction print() placée dans le script.
 
-# in Python2 exec is a keyword so one must use "exec_"
-# but for Python3 we want to provide the nicer version "exec"
-setattr(Pyboard, "exec", Pyboard.exec_)
+        Paramètres :
+            fileName (str) : nom du fichier MicroPython à exécuté.
 
+        Retourne (str) :
+            Chaîne de caractères transmit par la fonction print(str) du script micropython.
+        """
+        self.enter_raw_repl()
+        output = self.execfile(fileName)
+        self.exit_raw_repl()
+        return output.decode()
 
-def execfile(filename, device="/dev/ttyACM0", baudrate=115200, user="micro", password="python"):
-    pyb = Pyboard(device, baudrate, user, password)
-    pyb.enter_raw_repl()
-    output = pyb.execfile(filename)
-    stdout_write_bytes(output)
-    pyb.exit_raw_repl()
-    pyb.close()
+    def execFileToData(self, fileName):
+        """
+        Exécute un programme MicroPython à partir d'un ordinateur sur un microcontrôleur (avec le firmware MicroPython) par le port série en mode REPL RAW.
+        La fonction retourne un tuple transmise par une fonction print() placée dans le script.
 
+        Paramètres :
+            fileName (str) : nom du fichier MicroPython à exécuté.
 
-def filesystem_command(pyb, args):
-    def fname_remote(src):
-        if src.startswith(":"):
-            src = src[1:]
-        return src
+        Retourne (tuple) :
+            Tuple transmis par une unique fonction print(tuple) placée dans le script micropython.
+            Exemple : print((x,y))
+        """
+        self.enter_raw_repl()
+        data = self.execfile(fileName)
+        self.exit_raw_repl()
+        return eval(data.decode())
 
-    def fname_cp_dest(src, dest):
-        src = src.rsplit("/", 1)[-1]
-        if dest is None or dest == "":
-            dest = src
-        elif dest == ".":
-            dest = "./" + src
-        elif dest.endswith("/"):
-            dest += src
-        return dest
+    def execFileToCsv(self, fileName, csvFileName = "data.txt", sep = ';', headerLine = '# MicroPython Data'):
+        self.enter_raw_repl()
+        data = self.execfile(fileName)
+        self.exit_raw_repl()
+        data = eval(data.decode())
+        data = np.transpose(data)
+        np.savetxt(csvFileName, data, delimiter = sep, header = headerLine, comments='')
 
-    cmd = args[0]
-    args = args[1:]
-    try:
-        if cmd == "cp":
-            srcs = args[:-1]
-            dest = args[-1]
-            if srcs[0].startswith("./") or dest.startswith(":"):
-                op = pyb.fs_put
-                fmt = "cp %s :%s"
-                dest = fname_remote(dest)
-            else:
-                op = pyb.fs_get
-                fmt = "cp :%s %s"
-            for src in srcs:
-                src = fname_remote(src)
-                dest2 = fname_cp_dest(src, dest)
-                print(fmt % (src, dest2))
-                op(src, dest2)
-        else:
-            op = {
-                "ls": pyb.fs_ls,
-                "cat": pyb.fs_cat,
-                "mkdir": pyb.fs_mkdir,
-                "rmdir": pyb.fs_rmdir,
-                "rm": pyb.fs_rm,
-            }[cmd]
-            if cmd == "ls" and not args:
-                args = [""]
-            for src in args:
-                src = fname_remote(src)
-                print("%s :%s" % (cmd, src))
-                op(src)
-    except PyboardError as er:
-        print(str(er.args[2], "ascii"))
-        pyb.exit_raw_repl()
-        pyb.close()
-        sys.exit(1)
+    def execScript(self, lines):
+        """
+        Exécute un script MicroPython à partir d'un ordinateur sur un microcontrôleur (avec le firmware MicroPython) par le port série en mode REPL RAW.
+        La fonction retourne une chaine de caractères transmise par une fonction print() placée dans le script.
 
+        Paramètres :
+            lines (str) : script sous forme d'une chaîne de caractères sur plusieurs lignes
 
-_injected_import_hook_code = """\
-import uos, uio
-class _FS:
-  class File(uio.IOBase):
-    def __init__(self):
-      self.off = 0
-    def ioctl(self, request, arg):
-      return 0
-    def readinto(self, buf):
-      buf[:] = memoryview(_injected_buf)[self.off:self.off + len(buf)]
-      self.off += len(buf)
-      return len(buf)
-  mount = umount = chdir = lambda *args: None
-  def stat(self, path):
-    if path == '_injected.mpy':
-      return tuple(0 for _ in range(10))
-    else:
-      raise OSError(-2) # ENOENT
-  def open(self, path, mode):
-    return self.File()
-uos.mount(_FS(), '/_')
-uos.chdir('/_')
-from _injected import *
-uos.umount('/_')
-del _injected_buf, _FS
-"""
+        Retourne (str) :
+            Chaîne de caractères transmit par la fonction print(str) du script micropython.
+        """
+        self.enter_raw_repl()
+        output = self.exec_(lines)
+        self.exit_raw_repl()
+        return output.decode()
 
+    def execScriptToData(self, lines):
+        """
+        Exécute un script MicroPython à partir d'un ordinateur sur un microcontrôleur (avec le firmware MicroPython) par le port série en mode REPL RAW.
+        La fonction retourne un tuple transmise par une fonction print() placée dans le script.
 
-def main():
-    import argparse
+        Paramètres :
+            lines (str) : script sous forme d'une chaine de caractères sur plusieurs lignes
 
-    cmd_parser = argparse.ArgumentParser(description="Run scripts on the pyboard.")
-    cmd_parser.add_argument(
-        "-d",
-        "--device",
-        default=os.environ.get("PYBOARD_DEVICE", "/dev/ttyACM0"),
-        help="the serial device or the IP address of the pyboard",
-    )
-    cmd_parser.add_argument(
-        "-b",
-        "--baudrate",
-        default=os.environ.get("PYBOARD_BAUDRATE", "115200"),
-        help="the baud rate of the serial device",
-    )
-    cmd_parser.add_argument("-u", "--user", default="micro", help="the telnet login username")
-    cmd_parser.add_argument("-p", "--password", default="python", help="the telnet login password")
-    cmd_parser.add_argument("-c", "--command", help="program passed in as string")
-    cmd_parser.add_argument(
-        "-w",
-        "--wait",
-        default=0,
-        type=int,
-        help="seconds to wait for USB connected board to become available",
-    )
-    group = cmd_parser.add_mutually_exclusive_group()
-    group.add_argument(
-        "--follow",
-        action="store_true",
-        help="follow the output after running the scripts [default if no scripts given]",
-    )
-    group.add_argument(
-        "--no-follow",
-        action="store_true",
-        help="Do not follow the output after running the scripts.",
-    )
-    cmd_parser.add_argument(
-        "-f", "--filesystem", action="store_true", help="perform a filesystem action"
-    )
-    cmd_parser.add_argument("files", nargs="*", help="input files")
-    args = cmd_parser.parse_args()
-
-    # open the connection to the pyboard
-    try:
-        pyb = Pyboard(args.device, args.baudrate, args.user, args.password, args.wait)
-    except PyboardError as er:
-        print(er)
-        sys.exit(1)
-
-    # run any command or file(s)
-    if args.command is not None or args.filesystem or len(args.files):
-        # we must enter raw-REPL mode to execute commands
-        # this will do a soft-reset of the board
-        try:
-            pyb.enter_raw_repl()
-        except PyboardError as er:
-            print(er)
-            pyb.close()
-            sys.exit(1)
-
-        def execbuffer(buf):
-            try:
-                if args.no_follow:
-                    pyb.exec_raw_no_follow(buf)
-                    ret_err = None
-                else:
-                    ret, ret_err = pyb.exec_raw(
-                        buf, timeout=None, data_consumer=stdout_write_bytes
-                    )
-            except PyboardError as er:
-                print(er)
-                pyb.close()
-                sys.exit(1)
-            except KeyboardInterrupt:
-                sys.exit(1)
-            if ret_err:
-                pyb.exit_raw_repl()
-                pyb.close()
-                stdout_write_bytes(ret_err)
-                sys.exit(1)
-
-        # do filesystem commands, if given
-        if args.filesystem:
-            filesystem_command(pyb, args.files)
-            del args.files[:]
-
-        # run the command, if given
-        if args.command is not None:
-            execbuffer(args.command.encode("utf-8"))
-
-        # run any files
-        for filename in args.files:
-            with open(filename, "rb") as f:
-                pyfile = f.read()
-                if filename.endswith(".mpy") and pyfile[0] == ord("M"):
-                    pyb.exec_("_injected_buf=" + repr(pyfile))
-                    pyfile = _injected_import_hook_code
-                execbuffer(pyfile)
-
-        # exiting raw-REPL just drops to friendly-REPL mode
-        pyb.exit_raw_repl()
-
-    # if asked explicitly, or no files given, then follow the output
-    if args.follow or (args.command is None and not args.filesystem and len(args.files) == 0):
-        try:
-            ret, ret_err = pyb.follow(timeout=None, data_consumer=stdout_write_bytes)
-        except PyboardError as er:
-            print(er)
-            sys.exit(1)
-        except KeyboardInterrupt:
-            sys.exit(1)
-        if ret_err:
-            pyb.close()
-            stdout_write_bytes(ret_err)
-            sys.exit(1)
-
-    # close the connection to the pyboard
-    pyb.close()
-
-
-if __name__ == "__main__":
-    main()
+        Retourne (tuple) :
+            Tuple transmis par une unique fonction print(tuple) placée dans le script micropython.
+            Exemple : print((x,y))
+        """
+        self.enter_raw_repl()
+        data = self.exec_(lines)
+        self.exit_raw_repl()
+        return eval(data.decode())

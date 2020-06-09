@@ -4,15 +4,15 @@ Created on Fri Mar 20 23:27:11 2020
 @author: david
 """
 
-import numpy as np
+#import numpy as np
 import matplotlib.pyplot as plt
-from physique.csv import importAvimeca3
+from physique.csv import importAvimeca3Txt
 
-t, x, y = importAvimeca3('data1_avimeca3.txt')
+t, x, y = importAvimeca3Txt('data1_avimeca3.txt')
 
 plt.plot(x,y,'.')
 plt.xlabel('x (m)')
 plt.ylabel('y (m)')
 plt.grid()
-plt.title("Trajectoire d 'un ballon")
+plt.title("Trajectoire d'un ballon")
 plt.show()

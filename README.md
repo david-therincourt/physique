@@ -2,7 +2,7 @@
 
 ## Installation
 
-### Avec des dépôts de PyPi
+### A partir des dépôts de PyPi
 
 Lancer dans un terminal :
 
@@ -24,27 +24,27 @@ Fonctions pour réaliser une modélisation d'une courbe du type `y=f(x)`.
 
 #### Fonctions disponibles
 
-| Fonctions                      | Valeurs de retour    | Type de fonction modélisée   |
-| ------------------------------ | -------------------- | ---------------------------- |
-| ` ajustement_lineaire(x, y)`   | `a`                  | `y=ax​`                       |
-| `ajustement_affine(x, y)`      | `a`  et `b`          | `y=ax+b​`                     |
-| `ajustement_parabolique(x, y)` | `a` , `b` et  `c`    | `y=a x^2+bx+c​`               |
-| `ajustement_exp1(x, y)`        | `A`  et `tau`        | `y = A*(1-exp(-x/tau))`      |
-| `ajustement_exp1_x0(x, y)`     | `A` , `tau` et  `x0` | `y = A*(1-exp(-(x-x0)/tau))` |
-| `ajustement_exp2(x, y)`        | `A`  et `tau`        | `y = A*exp(-x/tau)`          |
-| `ajustement_exp2_x0(x, y) `    | `A` , `tau` et  `x0` | `y = A*exp(-(x-x0)/tau)`     |
+| Fonctions                                      | Valeurs de retour    | Type de fonction modélisée   |
+| ---------------------------------------------- | -------------------- | ---------------------------- |
+| ` ajustementLineaire(x, y)`                    | `a`                  | `y=ax​`                       |
+| `ajustementAffine(x, y)`                       | `a`  et `b`          | `y=ax+b​`                     |
+| `ajustementParabolique(x, y)`                  | `a` , `b` et  `c`    | `y=a x^2+bx+c​`               |
+| `ajustementExponentielleCroissante(x, y)`      | `A`  et `tau`        | `y = A*(1-exp(-x/tau))`      |
+| `ajustementExponentielleCroissanteX0(x, y)`    | `A` , `tau` et  `x0` | `y = A*(1-exp(-(x-x0)/tau))` |
+| `ajustementExponentielleDecroissante(x, y)`    | `A`  et `tau`        | `y = A*exp(-x/tau)`          |
+| `ajustementExponentielleDecroissanteX0(x, y) ` | `A` , `tau` et  `x0` | `y = A*exp(-(x-x0)/tau)`     |
 
-#### Exemple
+#### Exemple :
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from physique.modelisation import ajustement_parabolique
+from physique import ajustementParabolique
 
 x = np.array([0.003,0.141,0.275,0.410,0.554,0.686,0.820,0.958,1.089,1.227,1.359,1.490,1.599,1.705,1.801])
 y = np.array([0.746,0.990,1.175,1.336,1.432,1.505,1.528,1.505,1.454,1.355,1.207,1.018,0.797,0.544,0.266])
 
-[a, b, c] = ajustement_parabolique(x, y)
+[a, b, c] = ajustementParabolique(x, y)
 print(a, b, c)
 
 x_mod = np.linspace(0,max(x),50)
@@ -59,49 +59,65 @@ plt.show()
 
 Modules d'importation de tableau de données au format CSV à partir des logiciels Aviméca3, Regavi, ...
 
-#### Fonctions disponibles
+#### Quelques fonctions disponibles
 
-* `importAvimeca3(fichier)`  ou `importAvimeca3(fichier, sep=';')`
-* `importRegavi(fichier)`  ou `importRegavi(fichier, sep=';')` 
+* `importAvimeca3Txt(fichier)`  ou `importAvimeca3Txt(fichier, sep=';')`
+* `importRegaviTxt(fichier)`  ou `importRegaviTxt(fichier, sep=';')` 
 
 Le paramètre `sep` (séparateur de données) est optionnel. La tabulation (`sep='\t'`) est le séparateur par défaut.
 
-#### Exemple
+#### Exemple :
 
 ```python
 import matplotlib.pyplot as plt
-from physique.csv import importAvimeca3
+from physique.csv import importAvimeca3Txt
 
-t, x, y = importAvimeca3('data.txt') # séparateur = tabulation
+t, x, y = importAvimeca3Txt('data1_avimeca3.txt')
 
 plt.plot(x,y,'.')
+plt.xlabel('x (m)')
+plt.ylabel('y (m)')
+plt.grid()
+plt.title("Trajectoire d'un ballon")
 plt.show()
 ```
 
 Le fichier ` data.txt` est obtenu par l'exportation de données au format CSV dans le locigiel Aviméca3.
 
-### Le module ` micropythontools`
+### Le module ` pyboard`
 
-Module de pilotage d'une carte microcontrôleur (PyBoard, ESP32, Micro:bit, ...) fonctionnant sous micropython à partir d'un ordinateur sous Python par le port série (USB, Bluetooth, ...)
+Module d’interfaçage d'une carte microcontrôleur (PyBoard, ESP32, Micro:bit, ...) fonctionnant sous MicroPython à partir d'un ordinateur sous Python par le port série (USB, Bluetooth, ...)
 
-#### Fonctions disponibles
+#### Exécuter un instruction MicroPython dans un programme Python
 
-* `execFileOnBoard(nomFichier, portSerie)`
+```python
+from physique import Pyboard
 
-  Cette fonction exécute un programme Micropython (enregistré sur l'ordianteur) sur le microcontrôleur. Elle retourne un tuple envoyé par une fonction `print(tuple)`  placée dans le programme Micropython.
+pyboard = Pyboard("/dev/ttyACM0")
+pyboard.enter_raw_repl()
+pyboard.exec_('import pyb')
+pyboard.exec_('pyb.LED(1).on()')
+pyboard.exit_raw_repl()
+```
 
-* `execFileOnBoardToStr(nomFichier, portSerie) `
+#### Exécuter un fichier MicroPython dans un programme Python
 
-  Idem que la fonction précédent mais renvoie la chaine de caratères envoyé par une fonction `print(str)`  placée dans le programme Micropython.
+* `execFile(nomFichier)`
 
-#### Exemple
+  Exécute un programme MicroPython sur le microcontrôleur à partir d’un fichier `.py` présent sur l’ordinateur.
+
+* `execFileToData(nomFichier) `
+
+  Exécute un programme MicroPython sur le microcontrôleur à partir d’un fichier `.py` présent sur l’ordinateur. Retourne un tuple envoyé par une fonction `print(tuple)`  placée dans le programme MicroPython.
+
+##### Exemple :
 
 Programme MicroPython `read_adc.py` pour carte PyBoard (lecture sur entrée analogique) :
 
 ```python
 from pyb import Pin, ADC
 from time import sleep_ms
-adc = ADC(Pin('X1'))     # Broche X1 en entrée analogique
+adc = ADC(Pin('A0'))     # Broche X1 ou A0 en entrée analogique
 x, y = [], []            # Tableaux vides au départ
 for i in range(10):      # Mesures
     x.append(i)
@@ -115,10 +131,54 @@ Programme Python sur l'ordinateur dans le même répertoire que le programme Mic
 
 ```python
 import matplotlib.pyplot as plt
-from physique.micropythontools import execFileOnBoard
-x, y = execFileOnBoard("read_adc.py", "COM6") # Exécution du script MicroPython
+from physique import Pyboard
+
+pyboard = Pyboard("/dev/ttyACM0")
+x, y = pyboard.execFileToData("read_adc.py")
+
 plt.plot(x,y,'r.')
 plt.ylim(0,5000)
 plt.show()
 ```
+
+#### Exécuter un script MicroPython dans un programme Python
+
+* `execScript(nomFichier)`
+
+  Exécute un script Micropython sur le microcontrôleur dans un programme Python classique.
+
+* `execScriptToData(nomFichier) `
+
+  Exécute un script Micropython sur le microcontrôleur dans un programme Python classique. Retourne un tuple envoyé par une fonction `print(tuple)`  placée dans le programme Micropython.
+
+##### Exemple :
+
+Idem que l’exemple précédent mais dans un seul programme.
+
+```python
+import matplotlib.pyplot as plt
+from physique import Pyboard
+
+script = """
+from pyb import Pin, ADC
+from time import sleep_ms
+adc = ADC(Pin('A0'))     # Broche X1 ou A0 en entrée analogique
+x, y = [], []            # Tableaux vides au départ
+for i in range(10):      # Mesures
+    x.append(i)
+    y.append(adc.read()) # Lecture sur CAN
+    sleep_ms(500)        # attendre 500 ms
+data = x, y              # Tuple de données
+print(data)              # Envoie des données
+"""
+
+pyboard = Pyboard("/dev/ttyACM0")
+x, y = pyboard.execScriptToData(script)
+
+plt.plot(x,y,'r.')
+plt.ylim(0,5000)
+plt.show()
+```
+
+
 

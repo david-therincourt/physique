@@ -6,9 +6,9 @@ Created on Fri Mar 20 23:27:11 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
-from physique.csv import importRegavi
+from physique.csv import importRegaviTxt
 
-t, x, y = importRegavi('data_regavi.txt')
+t, x, y = importRegaviTxt('data_regavi.txt')
 
 plt.plot(x,y,'.')
 plt.xlabel('x (m)')
