@@ -51,9 +51,6 @@ Then:
     pyb.exec('pyb.LED(1).on()')
     pyb.exit_raw_repl()
 
-Note: if using Python2 then pyb.exec must be written as pyb.exec_.
-To run a script from the local machine on the board and print out the results:
-
 
 """
 
@@ -444,6 +441,20 @@ class Pyboard:
 
     def fs_rm(self, src):
         self.exec_("import uos\nuos.remove('%s')" % src)
+
+    def exec(self, cmd):
+        """
+        Exécute une commande MicroPython à partir d'un ordinateur sur un microcontrôleur (avec le firmware MicroPython) par le port série en mode REPL RAW.
+        La fonction retourne la chaîne de caractères renvoyée par la commande
+
+        Paramètres :
+            cmd (str) : instruction MicroPython
+
+        Retourne (str) :
+            Chaîne de caractères renvoyée par la commande dans le REPL
+        """
+        output = self.exec_(cmd)
+        return output.decode()
 
     def execFile(self, fileName):
         """

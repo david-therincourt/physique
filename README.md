@@ -8,6 +8,14 @@ Lancer dans un terminal :
 
 	pip install physique
 
+Dépendance à installer :
+
+```python
+pip install pyserial
+```
+
+
+
 ### A partir de l'archive de la bibliothèque
 
 Télécharger [ici](https://pypi.org/project/physique/#files) le fichier `physique-x.x.whl`. Les caractères `x` sont à remplacer par les numéros de version.
@@ -39,7 +47,7 @@ Fonctions pour réaliser une modélisation d'une courbe du type `y=f(x)`.
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from physique import ajustementParabolique
+from physique.modelisation import ajustementParabolique
 
 x = np.array([0.003,0.141,0.275,0.410,0.554,0.686,0.820,0.958,1.089,1.227,1.359,1.490,1.599,1.705,1.801])
 y = np.array([0.746,0.990,1.175,1.336,1.432,1.505,1.528,1.505,1.454,1.355,1.207,1.018,0.797,0.544,0.266])
@@ -86,19 +94,41 @@ Le fichier ` data.txt` est obtenu par l'exportation de données au format CSV da
 
 ### Le module ` pyboard`
 
-Module d’interfaçage d'une carte microcontrôleur (PyBoard, ESP32, Micro:bit, ...) fonctionnant sous MicroPython à partir d'un ordinateur sous Python par le port série (USB, Bluetooth, ...)
+Module d’interfaçage d'une carte microcontrôleur (PyBoard, ESP32, Micro:bit, ...) fonctionnant avec MicroPython à partir d'un ordinateur sous Python classique par le port série (USB, Bluetooth, ...) ou par le réseau.
 
-#### Exécuter un instruction MicroPython dans un programme Python
+#### Exécuter des instructions MicroPython dans un programme Python
 
 ```python
-from physique import Pyboard
+from physique.pyboard import Pyboard
 
-pyboard = Pyboard("/dev/ttyACM0")
+pyboard = Pyboard("COM3") # Port série de la carte ("/dev/ttyACM0" pour linux)
 pyboard.enter_raw_repl()
-pyboard.exec_('import pyb')
-pyboard.exec_('pyb.LED(1).on()')
+pyboard.exec('import pyb')       # Exécute une instruction MicroPython
+pyboard.exec('pyb.LED(1).on()')  # Exécute une autre instruction MicroPython
 pyboard.exit_raw_repl()
 ```
+
+Ou plusieurs instructions à la fois :
+
+```python
+from physique.pyboard import Pyboard
+from time import sleep
+
+pyboard = Pyboard("COM3") # Port série de la carte ("/dev/ttyACM0" pour linux)
+pyboard.enter_raw_repl()  # Entre dans le mode REPL
+
+pyboard.exec("""          # Execute plusieurs instructions
+from pyb import LED
+led = LED(1)
+""")
+for i in range(10):
+    pyboard.exec("led.toggle()")
+    sleep(1)
+   
+pyboard.exit_raw_repl()   # Sort du mode REPL
+```
+
+
 
 #### Exécuter un fichier MicroPython dans un programme Python
 
@@ -131,9 +161,9 @@ Programme Python sur l'ordinateur dans le même répertoire que le programme Mic
 
 ```python
 import matplotlib.pyplot as plt
-from physique import Pyboard
+from physique.pyboard import Pyboard
 
-pyboard = Pyboard("/dev/ttyACM0")
+pyboard = Pyboard("COM3") # Port série de la carte ("/dev/ttyACM0" pour linux)
 x, y = pyboard.execFileToData("read_adc.py")
 
 plt.plot(x,y,'r.')
@@ -157,7 +187,7 @@ Idem que l’exemple précédent mais dans un seul programme.
 
 ```python
 import matplotlib.pyplot as plt
-from physique import Pyboard
+from physique.pyboard import Pyboard
 
 script = """
 from pyb import Pin, ADC
@@ -172,7 +202,7 @@ data = x, y              # Tuple de données
 print(data)              # Envoie des données
 """
 
-pyboard = Pyboard("/dev/ttyACM0")
+pyboard = Pyboard("COM3") # Port série de la carte ("/dev/ttyACM0" pour linux)
 x, y = pyboard.execScriptToData(script)
 
 plt.plot(x,y,'r.')
