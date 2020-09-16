@@ -10,4 +10,4 @@ for i in range(10):
 """
 
 feather = Pyboard("/dev/ttyACM0")
-feather.execScript(programme)
+feather.exec_script(programme)

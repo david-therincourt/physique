@@ -2,7 +2,7 @@ from physique import Pyboard
 
 feather = Pyboard("/dev/ttyACM0")
 
-reponse = feather.execScript("""
+reponse = feather.exec_script("""
 print("Hello")
 print("MicroPython")
 """)

@@ -40,7 +40,7 @@ def parabole(x, a, b, c) :
     """
     return a*x**2+b*x+c
 
-def exponentielleCroissante(x, A, tau, x0=0):
+def exponentielle_croissante(x, A, tau, x0=0):
     """
     Fonction exponenetielle croissante du type y = A*(1-exp(-(x-x0)/tau))
 
@@ -57,7 +57,7 @@ def exponentielleCroissante(x, A, tau, x0=0):
     """
     return A*(1-np.exp(-(x-x0)/tau))
 
-def exponentielleDecroissante(x, A, tau, x0=0):
+def exponentielle_decroissante(x, A, tau, x0=0):
     """
     Fonction exponenetielle décroissante du type y = A*exp(-(x-x0)/tau)
 
@@ -78,7 +78,7 @@ def exponentielleDecroissante(x, A, tau, x0=0):
 # Modélisations
 #---------------------------------------------
 
-def ajustementAffine(x, y):
+def ajustement_affine(x, y):
     """
     Modélisation d'une fonction affine de la forme y = a*x + b
 
@@ -94,7 +94,7 @@ def ajustementAffine(x, y):
     return a, b
 
 
-def ajustementLineaire(x, y, a_p0=1) :
+def ajustement_lineaire(x, y, a_p0=1) :
     """
     Modélisation d'une fonction parabolique du type y = a*x
 
@@ -110,7 +110,7 @@ def ajustementLineaire(x, y, a_p0=1) :
 
 
 
-def ajustementParabolique(x, y) :
+def ajustement_parabolique(x, y) :
     """
     Modélisation d'une fonction parabolique du type y = a*x**2 + b*x + c
 
@@ -124,7 +124,7 @@ def ajustementParabolique(x, y) :
     return np.polyfit(x, y, 2)
 
 
-def ajustementExponentielleCroissante(x, y, A_p0=1, tau_p0=1) :
+def ajustement_exponentielle_croissante(x, y, A_p0=1, tau_p0=1) :
     """
     Modélisation d'une série de points (x,y) par une fonction exponentielle croissante
     du type y = A*(1-exp(-x/tau))
@@ -141,10 +141,10 @@ def ajustementExponentielleCroissante(x, y, A_p0=1, tau_p0=1) :
     A (float)  : limite à l'infini.
     tau (float) : constante de temps.
     """
-    (A,tau), pcov = curve_fit(exponentielleCroissante,x,y, p0=[A_p0, tau_p0])
+    (A,tau), pcov = curve_fit(exponentielle_croissante,x,y, p0=[A_p0, tau_p0])
     return A, tau
 
-def ajustementExponentielleCroissanteX0(x, y, A_p0=1, tau_p0=1, x0_p0=0) :
+def ajustement_exponentielle_croissante_x0(x, y, A_p0=1, tau_p0=1, x0_p0=0) :
     """
     Modélisation d'une série de points (x,y) par une fonction exponentielle croissante
     décalée suivant l'abscisse du type y = A*(1-exp(-(x-xo)/tau))
@@ -163,12 +163,12 @@ def ajustementExponentielleCroissanteX0(x, y, A_p0=1, tau_p0=1, x0_p0=0) :
     tau (float) : constante de temps.
     x0 (float) : retard.
     """
-    (A,tau,x0), pcov = curve_fit(exponentielleCroissante,x,y, p0=[A_p0, tau_p0, x0_p0])
+    (A,tau,x0), pcov = curve_fit(exponentielle_croissante,x,y, p0=[A_p0, tau_p0, x0_p0])
     return A, tau, x0
 
 
 
-def ajustementExponentielleDecroissante(x, y, A_p0=1, tau_p0=1) :
+def ajustement_exponentielle_decroissante(x, y, A_p0=1, tau_p0=1) :
     """
     Modélisation d'une série de points (x,y) par une fonction exponentielle croissante
     du type y = A*exp(-x/tau)
@@ -185,10 +185,10 @@ def ajustementExponentielleDecroissante(x, y, A_p0=1, tau_p0=1) :
     A (float)  : limite à l'infini.
     tau (float) : constante de temps.
     """
-    (A,tau), pcov = curve_fit(exponentielleDecroissante, x, y, p0=[A_p0, tau_p0])
+    (A,tau), pcov = curve_fit(exponentielle_decroissante, x, y, p0=[A_p0, tau_p0])
     return A, tau
 
-def ajustementExponentielleDecroissanteX0(x, y, A_p0=1, tau_p0=1, x0_p0=1) :
+def ajustement_exponentielle_decroissante_x0(x, y, A_p0=1, tau_p0=1, x0_p0=1) :
     """
     Modélisation d'une série de points (x,y) par une fonction exponentielle croissante
     du type y = A*exp(-(x-x0)/tau)
@@ -206,5 +206,5 @@ def ajustementExponentielleDecroissanteX0(x, y, A_p0=1, tau_p0=1, x0_p0=1) :
     tau (float) : constante de temps.
     x0 (float) : retard.
     """
-    (A,tau, x0), pcov = curve_fit(exponentielleDecroissante, x, y, p0=[A_p0, tau_p0, x0_p0])
+    (A,tau, x0), pcov = curve_fit(exponentielle_decroissante, x, y, p0=[A_p0, tau_p0, x0_p0])
     return A, tau, x0

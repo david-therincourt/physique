@@ -18,7 +18,7 @@ print((x, y))
 """
 
 feather = Pyboard("/dev/ttyACM0")
-x, y = feather.execScriptToData(programme)
+x, y = feather.exec_script_to_data(programme)
 
 print("x = ", x)
 print("y = ", y)

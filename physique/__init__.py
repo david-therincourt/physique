@@ -8,13 +8,13 @@ Modules disponibles de la librairie (package) physique :
     Modélisation de courbes (linéaire, affine, parabolique, exponentielle, ...)
 
     Exemple :
-    >>> from physique import ajustementParabolique
+    >>> from physique import ajustement_parabolique
 
 - csv :
     Importation et exportation de données au format CSV pour Avimeca3, Regavi, Regressi, Latis, ...
 
     Exemple :
-    >>> from physique import importAvimeca3Txt
+    >>> from physique import import_avimeca3_txt
 
 - pyboard :
     Exécution d'un programme MicroPython sur un microcontrôleur (Micro:bit, Pyboard, ESP32, ...)
@@ -24,7 +24,7 @@ Modules disponibles de la librairie (package) physique :
     Exemple :
     >>> from physique import Pyboard
     >>> pyboard = Pyboard("/dev/ttyACM0")
-    >>> reponse = pyboard.execFile("hello.py")
+    >>> reponse = pyboard.exec_file("hello.py")
     >>> print(reponse)
 
 

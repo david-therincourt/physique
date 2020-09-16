@@ -9,7 +9,7 @@ Logiciels pris en compte : Latis, Regressi, RegAvi, AviMeca3
 import numpy as np
 from io import StringIO
 
-def normalisefileName(fileName, encodage = 'utf-8') :
+def normalise_file_name(fileName, encodage = 'utf-8') :
     """
     Normalise les séparateurs décimaux dans un fichier CSV en remplaçant les virgules par des points.
     """
@@ -18,7 +18,7 @@ def normalisefileName(fileName, encodage = 'utf-8') :
     f.close()
     return StringIO(data.replace(",","."))
 
-def importCsv(fileName, sep = ';', skip = 1, commentChar = '') :
+def import_txt(fileName, sep = ';', skip_header = 1) :
     """
     Importe des données au format CSV à partir du logiciel AviMéca 3
     Paramètre :
@@ -26,13 +26,12 @@ def importCsv(fileName, sep = ';', skip = 1, commentChar = '') :
     Paramètre optionnel :
         sep (str) : caractère de séparation des colonnes de données (";" par défaut)
         skip (integer) : nombre de ligne à sauter au début du fichier
-        commentChar (str) : caractère définissant un commentaire
     Retourne (tuple) :
         Un tuple de tableaux Numpy
     """
-    return np.genfromtxt(fileName, delimiter = sep, unpack = True, skip_header = skip, comments = commentChar)
+    return np.genfromtxt(fileName, delimiter = sep, unpack = True, skip_header = skip_header)
 
-def importAvimeca3Txt(fileName, sep = '\t') :
+def import_avimeca3_txt(fileName, sep = '\t') :
     """
     Importe des données au format CSV à partir du logiciel AviMéca 3
     Paramètre :
@@ -42,10 +41,10 @@ def importAvimeca3Txt(fileName, sep = '\t') :
     Retourne (tuple) :
         Un tuple de tableaux Numpy
     """
-    data = normalisefileName(fileName, encodage = 'cp1252') # iso-8859-1 ou CP1252
+    data = normalise_file_name(fileName, encodage = 'cp1252') # iso-8859-1 ou CP1252
     return np.genfromtxt(data, delimiter = sep, unpack = True, skip_header = 3, comments = '#')
 
-def importRegaviTxt(fileName, sep = '\t') :
+def import_regavi_txt(fileName, sep = '\t') :
     """
     Importe des données au format CSV à partir du logiciel RegAvi
     Paramètre :
@@ -55,10 +54,10 @@ def importRegaviTxt(fileName, sep = '\t') :
     Retourne (tuple) :
         Un tuple de tableaux Numpy
     """
-    data = normalisefileName(fileName, encodage = 'ascii')
+    data = normalise_file_name(fileName, encodage = 'ascii')
     return np.genfromtxt(data, delimiter = sep, unpack = True, skip_header = 2, comments = '#')
 
-def importRegressiTxt(fileName) :
+def import_regressi_txt(fileName) :
     """
     Importe des données au format TXT à partir du logiciel Regressi
     Paramètre :
@@ -69,7 +68,7 @@ def importRegressiTxt(fileName) :
 
     return np.genfromtxt(fileName, delimiter = "\t", unpack = True, skip_header = 2, comments = '')
 
-def importRegressiCsv(fileName) :
+def import_regressi_csv(fileName) :
     """
     Importe des données au format CSV à partir du logiciel Regressi
     Paramètre :
@@ -77,14 +76,14 @@ def importRegressiCsv(fileName) :
     Retourne (tuple) :
         Un tuple de tableaux Numpy
     """
-    data = normalisefileName(fileName, encodage = 'ascii')
+    data = normalise_file_name(fileName, encodage = 'ascii')
     return np.genfromtxt(data, delimiter = ";", unpack = True, skip_header = 2, comments = '')
 
 #######################################
 # Exportation
 #######################################
 
-def exportTxt(data, fileName = "data.txt", sep = ";", headerLine = ''):
+def export_txt(data, fileName = "data.txt", sep = ";", headerLine = ''):
     """
     Exporte des données au format CSV dans un fichier texte (txt) compatible Regressi, Latis, Libre office. Ecrase le fileName existant.
     Paramètre :

@@ -453,10 +453,11 @@ class Pyboard:
         Retourne (str) :
             Chaîne de caractères renvoyée par la commande dans le REPL
         """
-        output = self.exec_(cmd)
-        return output.decode()
+        raw_output = self.exec_(cmd)
+        output = raw_output.decode()
+        return output[:-2]  # Return string without last 2 character "\r\n"
 
-    def execFile(self, fileName):
+    def exec_file(self, fileName):
         """
         Exécute un programme MicroPython à partir d'un ordinateur sur un microcontrôleur (avec le firmware MicroPython) par le port série en mode REPL RAW.
         La fonction retourne une chaine de caractères transmise par une fonction print() placée dans le script.
@@ -472,7 +473,7 @@ class Pyboard:
         self.exit_raw_repl()
         return output.decode()
 
-    def execFileToData(self, fileName):
+    def exec_file_to_data(self, fileName):
         """
         Exécute un programme MicroPython à partir d'un ordinateur sur un microcontrôleur (avec le firmware MicroPython) par le port série en mode REPL RAW.
         La fonction retourne un tuple transmise par une fonction print() placée dans le script.
@@ -489,7 +490,7 @@ class Pyboard:
         self.exit_raw_repl()
         return eval(data.decode())
 
-    def execFileToCsv(self, fileName, csvFileName = "data.txt", sep = ';', headerLine = '# MicroPython Data'):
+    def exec_file_to_csv(self, fileName, csvFileName = "data.txt", sep = ';', headerLine = '# MicroPython Data'):
         self.enter_raw_repl()
         data = self.execfile(fileName)
         self.exit_raw_repl()
@@ -497,7 +498,7 @@ class Pyboard:
         data = np.transpose(data)
         np.savetxt(csvFileName, data, delimiter = sep, header = headerLine, comments='')
 
-    def execScript(self, lines):
+    def exec_script(self, lines):
         """
         Exécute un script MicroPython à partir d'un ordinateur sur un microcontrôleur (avec le firmware MicroPython) par le port série en mode REPL RAW.
         La fonction retourne une chaine de caractères transmise par une fonction print() placée dans le script.
@@ -513,7 +514,7 @@ class Pyboard:
         self.exit_raw_repl()
         return output.decode()
 
-    def execScriptToData(self, lines):
+    def exec_script_to_data(self, lines):
         """
         Exécute un script MicroPython à partir d'un ordinateur sur un microcontrôleur (avec le firmware MicroPython) par le port série en mode REPL RAW.
         La fonction retourne un tuple transmise par une fonction print() placée dans le script.

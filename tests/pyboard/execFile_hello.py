@@ -1,4 +1,4 @@
 from physique import Pyboard
 feather = Pyboard("/dev/ttyACM0")
-reponse = feather.execFile("hello.py")
+reponse = feather.exec_file("hello.py")
 print(reponse)

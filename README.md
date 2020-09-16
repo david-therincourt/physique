@@ -34,25 +34,25 @@ Fonctions pour réaliser une modélisation d'une courbe du type `y=f(x)`.
 
 | Fonctions                                      | Valeurs de retour    | Type de fonction modélisée   |
 | ---------------------------------------------- | -------------------- | ---------------------------- |
-| ` ajustementLineaire(x, y)`                    | `a`                  | `y=ax​`                       |
-| `ajustementAffine(x, y)`                       | `a`  et `b`          | `y=ax+b​`                     |
-| `ajustementParabolique(x, y)`                  | `a` , `b` et  `c`    | `y=a x^2+bx+c​`               |
-| `ajustementExponentielleCroissante(x, y)`      | `A`  et `tau`        | `y = A*(1-exp(-x/tau))`      |
-| `ajustementExponentielleCroissanteX0(x, y)`    | `A` , `tau` et  `x0` | `y = A*(1-exp(-(x-x0)/tau))` |
-| `ajustementExponentielleDecroissante(x, y)`    | `A`  et `tau`        | `y = A*exp(-x/tau)`          |
-| `ajustementExponentielleDecroissanteX0(x, y) ` | `A` , `tau` et  `x0` | `y = A*exp(-(x-x0)/tau)`     |
+| ` ajustement_lineaire(x, y)`                    | `a`                  | `y=ax​`                       |
+| `ajustement_affine(x, y)`                       | `a`  et `b`          | `y=ax+b​`                     |
+| `ajustement_parabolique(x, y)`                  | `a` , `b` et  `c`    | `y=a x^2+bx+c​`               |
+| `ajustement_exponentielle_croissante(x, y)`      | `A`  et `tau`        | `y = A*(1-exp(-x/tau))`      |
+| `ajustement_exponentielle_croissante_x0(x, y)`    | `A` , `tau` et  `x0` | `y = A*(1-exp(-(x-x0)/tau))` |
+| `ajustement_exponentielle_decroissante(x, y)`    | `A`  et `tau`        | `y = A*exp(-x/tau)`          |
+| `ajustement_exponentielle_decroissante_x0(x, y) ` | `A` , `tau` et  `x0` | `y = A*exp(-(x-x0)/tau)`     |
 
 #### Exemple :
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-from physique.modelisation import ajustementParabolique
+from physique.modelisation import ajustement_parabolique
 
 x = np.array([0.003,0.141,0.275,0.410,0.554,0.686,0.820,0.958,1.089,1.227,1.359,1.490,1.599,1.705,1.801])
 y = np.array([0.746,0.990,1.175,1.336,1.432,1.505,1.528,1.505,1.454,1.355,1.207,1.018,0.797,0.544,0.266])
 
-[a, b, c] = ajustementParabolique(x, y)
+[a, b, c] = ajustement_parabolique(x, y)
 print(a, b, c)
 
 x_mod = np.linspace(0,max(x),50)
@@ -69,8 +69,8 @@ Modules d'importation de tableau de données au format CSV à partir des logicie
 
 #### Quelques fonctions disponibles
 
-* `importAvimeca3Txt(fichier)`  ou `importAvimeca3Txt(fichier, sep=';')`
-* `importRegaviTxt(fichier)`  ou `importRegaviTxt(fichier, sep=';')` 
+* `import_avimeca3_txt(fichier)`  ou `import_avimeca3_txt(fichier, sep=';')`
+* `import_regavi_txt(fichier)`  ou `import_regavi_txt(fichier, sep=';')` 
 
 Le paramètre `sep` (séparateur de données) est optionnel. La tabulation (`sep='\t'`) est le séparateur par défaut.
 
@@ -78,9 +78,9 @@ Le paramètre `sep` (séparateur de données) est optionnel. La tabulation (`sep
 
 ```python
 import matplotlib.pyplot as plt
-from physique.csv import importAvimeca3Txt
+from physique.csv import import_avimeca3_txt
 
-t, x, y = importAvimeca3Txt('data1_avimeca3.txt')
+t, x, y = import_avimeca3_txt('data1_avimeca3.txt')
 
 plt.plot(x,y,'.')
 plt.xlabel('x (m)')
@@ -132,11 +132,11 @@ pyboard.exit_raw_repl()   # Sort du mode REPL
 
 #### Exécuter un fichier MicroPython dans un programme Python
 
-* `execFile(nomFichier)`
+* `exec_file(nomFichier)`
 
   Exécute un programme MicroPython sur le microcontrôleur à partir d’un fichier `.py` présent sur l’ordinateur.
 
-* `execFileToData(nomFichier) `
+* `exec_file_to_data(nomFichier) `
 
   Exécute un programme MicroPython sur le microcontrôleur à partir d’un fichier `.py` présent sur l’ordinateur. Retourne un tuple envoyé par une fonction `print(tuple)`  placée dans le programme MicroPython.
 
@@ -164,7 +164,7 @@ import matplotlib.pyplot as plt
 from physique.pyboard import Pyboard
 
 pyboard = Pyboard("COM3") # Port série de la carte ("/dev/ttyACM0" pour linux)
-x, y = pyboard.execFileToData("read_adc.py")
+x, y = pyboard.exec_file_to_data("read_adc.py")
 
 plt.plot(x,y,'r.')
 plt.ylim(0,5000)
@@ -173,11 +173,11 @@ plt.show()
 
 #### Exécuter un script MicroPython dans un programme Python
 
-* `execScript(nomFichier)`
+* `exec_script(nomFichier)`
 
   Exécute un script Micropython sur le microcontrôleur dans un programme Python classique.
 
-* `execScriptToData(nomFichier) `
+* `exec_script_to_data(nomFichier) `
 
   Exécute un script Micropython sur le microcontrôleur dans un programme Python classique. Retourne un tuple envoyé par une fonction `print(tuple)`  placée dans le programme Micropython.
 
@@ -203,7 +203,7 @@ print(data)              # Envoie des données
 """
 
 pyboard = Pyboard("COM3") # Port série de la carte ("/dev/ttyACM0" pour linux)
-x, y = pyboard.execScriptToData(script)
+x, y = pyboard.exec_script_to_data(script)
 
 plt.plot(x,y,'r.')
 plt.ylim(0,5000)
