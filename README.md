@@ -65,11 +65,18 @@ y = [0.746,0.990,1.175,1.336,1.432,1.505,1.528,1.505,1.454,1.355,1.207,1.018,0.7
 
 a, b, c = ajustement_parabolique(x, y, plot_axes=plt)
 
-plt.plot(x, y, 'x', label="Mesures")
-plt.legend()
+plt.plot(x, y, '+', label="Mesures")
+plt.legend(facecolor="linen")
+plt.title("Trajectoire d'un ballon")
+plt.xlabel("x (m)")
+plt.ylabel("y (m)")
 plt.grid()
 plt.show()
 ```
+
+![](https://david-therincourt.fr/python/pypi-physique/exemple_1.png)
+
+L'option `plot_axes` trace la courbe du modèle dans le repère (`axes`) indiqué. L'étiquette (`label`) du modèle donne le résultat de la modélisation dans la légende !
 
 ---
 
@@ -99,17 +106,19 @@ Module d'importation de tableau de données au format CSV à partir des logiciel
 
 ```python
 import matplotlib.pyplot as plt
-from physique.csv import import_avimeca3_txt
+from physique import load_avimeca3_txt
 
-t, x, y = import_avimeca3_txt('data1_avimeca3.txt')
+t, x, y = load_avimeca3_txt('data.txt')
 
 plt.plot(x,y,'.')
+plt.title("Trajectoire d'un ballon")
 plt.xlabel('x (m)')
 plt.ylabel('y (m)')
 plt.grid()
-plt.title("Trajectoire d'un ballon")
 plt.show()
 ```
+
+![](https://david-therincourt.fr/python/pypi-physique/exemple_2.png)
 
 ---
 
@@ -132,9 +141,25 @@ Module Module pour le traitement des signaux.
 ### Exemple
 
 ```python
-from physique.csv import load_oscillo_csv
-from physique.signal import periode
+import numpy as np
+import matplotlib.pyplot as plt
+from physique import load_oscillo_csv, integre
 
 t, u = load_oscillo_csv('scope.csv')
-T = periode(t, u)
+
+f = 125
+T = 1/f
+aire = integre(t, u, 0, T, plot_axes=plt)
+moy = aire/T
+
+plt.plot(t, u)
+plt.axhline(moy, ls="--", color="C3")
+plt.text(0.65*T, moy+0.2, "Moy = {:.2f} V".format(moy), color="C3")
+plt.title("Valeur moyenne d'un signal périodique")
+plt.xlabel("t (s)")
+plt.ylabel("u (V)")
+plt.grid()
+plt.show()
 ```
+
+![](https://david-therincourt.fr/python/pypi-physique/exemple_3.png)

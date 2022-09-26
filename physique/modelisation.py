@@ -203,7 +203,7 @@ def ajustement_parabolique(x, y, plot_axes=None, plot_xmin=None, plot_xmax=None,
         else:
             text_c = "{:.4e}".format(c)
         
-        text_label = r"$y=a \cdot x^2 + b\cdot x + c$" + "\n" + "(" + text_a + ", " + text_b + ", " + text_c + ")" 
+        text_label = "Modèle : " + r"$y=a \cdot x^2 + b\cdot x + c$" + "\n" + "a=" + text_a + "  b=" + text_b + "  c=" + text_c 
         line = plot_axes.plot(x_mod, y_mod, label=text_label)
 
         if return_line==True:
