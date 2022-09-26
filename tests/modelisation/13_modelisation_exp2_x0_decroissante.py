@@ -8,22 +8,19 @@ Ne fonctionne pas bien pour x0 car une infinité de solution en fonction de A
 
 import numpy as np
 import matplotlib.pyplot as plt
-from physique import exponentielle_decroissante, ajustement_exponentielle_decroissante_x0
+from physique.modelisation import *
 
 x=np.array([2,3,4,5,6,7,8,9,10,11])
 y=np.array([4.98, 3.59, 2.57, 1.83, 1.32, 0.93, 0.67, 0.48, 0.34, 0.25])
 
 # Modélisation
-A, tau, x0 = ajustement_exponentielle_decroissante_x0(x, y, x0_p0=2)
+A, tau, x0, line1 = ajustement_exponentielle_decroissante_x0(x, y, plot_axes=plt, plot_xmax=20, return_line=True)
+line1.set(linestyle="--")
 print(A, tau, x0)
 
-# Tracé du modèle
-x_mod = np.linspace(0,20,50)
-y_mod = exponentielle_decroissante(x_mod,A,tau,x0)
 
-
-plt.plot(x_mod, y_mod, '-')
-#plt.plot(x_mod, y_reel, 'r-')
-plt.plot(x, y, 'x')
+plt.plot(x, y, '+', label="Mesures")
+plt.legend()
+plt.xlim(0,20)
 plt.grid()
 plt.show()

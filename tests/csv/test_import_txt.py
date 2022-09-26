@@ -6,9 +6,9 @@ Created on Fri Mar 20 23:27:11 2020
 
 #import numpy as np
 import matplotlib.pyplot as plt
-from physique.csv import import_txt
+from physique.csv import load_txt
 
-x, y = import_txt('data.txt')
+x, y = load_txt('data.txt')
 
 plt.plot(x,y,'.')
 plt.xlabel('x (m)')

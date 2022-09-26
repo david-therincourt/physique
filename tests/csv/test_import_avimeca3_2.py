@@ -6,9 +6,9 @@ Created on Fri Mar 20 23:27:11 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
-from physique.csv import import_avimeca3_txt
+from physique.csv import load_avimeca3_txt
 
-t, x, y = import_avimeca3_txt('data2_avimeca3.txt', sep = ';')
+t, x, y = load_avimeca3_txt('data2_avimeca3.txt', sep = ';')
 
 plt.plot(x,y,'.')
 plt.xlabel('x (m)')
