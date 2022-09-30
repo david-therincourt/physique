@@ -7,7 +7,7 @@ f, Ue, Us, phi = np.loadtxt('bode_RC1.csv', delimiter=',', skiprows=1, unpack=Tr
 
 T = Us/Ue
 
-T0, f0 = ajustement_transmittance_ordre1_passe_bas(f, T, plot_axes=plt)
+T0, f0 = ajustement_transmittance_ordre1_passe_bas(f, T, plot_ax=plt)
 
 
 plt.plot(f, T, '+', label="Mesures")

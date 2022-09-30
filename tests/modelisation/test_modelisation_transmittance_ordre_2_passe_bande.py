@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from physapp.modelisation import *
+from physique.modelisation import *
 
 ### IMPORTATION ###
 f, Us = np.loadtxt('wien.csv', delimiter=',', skiprows=1, unpack=True)

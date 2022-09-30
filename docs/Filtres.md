@@ -84,8 +84,6 @@ $$
 \varphi = -\arctan(\dfrac{2m\dfrac{f}{f_0}}{1-\dfrac{f^2}{f_0^2}})
 $$
 
-
-
 ## Ordre 2 - Passe haut
 
 Transmittance complexe :
@@ -115,8 +113,6 @@ Phase :
 $$
 \varphi = 180 -\arctan(\dfrac{2m\dfrac{f}{f_0}}{1-\dfrac{f^2}{f_0^2}})
 $$
-
-
 
 ## Ordre 2 - Passe bande
 

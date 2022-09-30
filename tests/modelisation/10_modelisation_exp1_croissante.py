@@ -13,7 +13,7 @@ x=np.array([0,1,2,3,4,5,6,7,8,9])
 y=np.array([0.,3.935,6.321,7.769,8.647,9.179,9.502,9.698,9.817,9.889])
 
 # Modélisation
-A, tau = ajustement_exponentielle_croissante(x, y, plot_axes=plt)
+A, tau = ajustement_exponentielle_croissante(x, y, plot_ax=plt)
 print(A, tau)
 
 

@@ -14,7 +14,7 @@ x=np.array([2,3,4,5,6,7,8,9,10,11])
 y=np.array([4.98, 3.59, 2.57, 1.83, 1.32, 0.93, 0.67, 0.48, 0.34, 0.25])
 
 # Modélisation
-A, tau, x0, line1 = ajustement_exponentielle_decroissante_x0(x, y, plot_axes=plt, plot_xmax=20, return_line=True)
+A, tau, x0, line1 = ajustement_exponentielle_decroissante_x0(x, y, plot_ax=plt, plot_xmax=20, return_line=True)
 line1.set(linestyle="--")
 print(A, tau, x0)
 

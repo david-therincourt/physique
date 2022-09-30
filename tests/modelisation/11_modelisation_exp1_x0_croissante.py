@@ -14,7 +14,7 @@ x=np.array([2,3,4,5,6,7,8,9,10,11])
 y=np.array([0.,3.935,6.321,7.769,8.647,9.179,9.502,9.698,9.817,9.889])
 
 # Modélisation
-A, tau, x0, line1 = ajustement_exponentielle_croissante_x0(x, y, plot_axes=plt, return_line=True)
+A, tau, x0, line1 = ajustement_exponentielle_croissante_x0(x, y, plot_ax=plt, return_line=True)
 line1.set(color = "C2")
 print(A, tau, x0)
 

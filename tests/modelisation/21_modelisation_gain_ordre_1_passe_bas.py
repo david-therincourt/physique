@@ -7,7 +7,7 @@ f, Ue, Us, phi = np.loadtxt('bode_RC1.csv', delimiter=',', skiprows=1, unpack=Tr
 
 G = 20*np.log10(Us/Ue)
 
-G0, f0 = ajustement_gain_ordre1_passe_bas(f, G, plot_axes=plt)
+G0, f0 = ajustement_gain_ordre1_passe_bas(f, G, plot_ax=plt)
 print(G0, f0)
 
 plt.plot(f, G, '+', label="Mesures")

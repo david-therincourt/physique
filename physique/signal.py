@@ -68,7 +68,7 @@ def _autocorrelation(y, N, i, M):
     return C
 
 
-def periode(t, y, draw_period_axes=None, draw_period_start=None, draw_period_color="linen"):
+def periode(t, y, draw_period_ax=None, draw_period_start=None, draw_period_color="linen"):
     """ Renvoie le période T du signal périodique y(t) par une méthode d'autocorrélation.
     Le signal y(t) doit comporter au moins deux motifs.
     Un nombre important de motifs peut donner des erreurs !
@@ -81,7 +81,7 @@ def periode(t, y, draw_period_axes=None, draw_period_start=None, draw_period_col
     y : numpy.ndarray
         Tableau des valeurs du signal.
 
-    draw_period_axes  : matplotlib.axes, optionnel (None par défaut)
+    draw_period_ax  : matplotlib.axes, optionnel (None par défaut)
         Repère (axes) pour dessiner la période.
 
     draw_period_start : float, optionnel (None par défaut)
@@ -111,14 +111,14 @@ def periode(t, y, draw_period_axes=None, draw_period_start=None, draw_period_col
     if draw_period_start == None:
         draw_period_start = t[0]
         
-    if draw_period_axes != None:
-        draw_period_axes.axvspan(draw_period_start, draw_period_start+T , color=draw_period_color)
+    if draw_period_ax != None:
+        draw_period_ax.axvspan(draw_period_start, draw_period_start+T , color=draw_period_color)
         
     return T
 
 
 
-def integre(x, y, xmin, xmax, plot_axes=None):
+def integre(x, y, xmin, xmax, plot_ax=None):
     """ Calcule numériquement l'intégrale de la fonction y=f(x) entre
     les bornes xmin et xmax avec la méthode des trapèzes.
     
@@ -135,7 +135,7 @@ def integre(x, y, xmin, xmax, plot_axes=None):
     xmax : float
         Borne supérieure pour l'intégration.
 
-    plot_axes : matplotlib.axes, optionnel (None par défaut)
+    plot_ax : matplotlib.axes, optionnel (None par défaut)
         Repère (axes) sur lequel tracé l'aire de l'intégration.
         
     Return
@@ -154,15 +154,15 @@ def integre(x, y, xmin, xmax, plot_axes=None):
     y = y[(x >= xmin) & (x < xmax)]  # Sélection sur une période
     x = x[(x >= xmin) & (x < xmax)]  # Sélection sur une période
     
-    if plot_axes != None:
-        plot_axes.fill_between(x,y,hatch='\\',facecolor='linen',  edgecolor='gray')
+    if plot_ax != None:
+        plot_ax.fill_between(x,y,hatch='\\',facecolor='linen',  edgecolor='gray')
         
     return trapz(y)*(x[-1]-x[0])/len(x)
 
 
 
 
-def spectre_amplitude(t, y, T, tmin=0, plot_period_axes=None):
+def spectre_amplitude(t, y, T, tmin=0, plot_period_ax=None):
     ''' Retourne le spectre d'amplitude d'un signal y(t).
     
     Parameters
@@ -179,7 +179,7 @@ def spectre_amplitude(t, y, T, tmin=0, plot_period_axes=None):
     tmin : float, optionnel (0 par défaut)
         Borne inférieure le calcul du spectre.
 
-    plot_period_axes : matplotlib.axes, optionnel (None par défaut)
+    plot_period_ax : matplotlib.axes, optionnel (None par défaut)
         Repère (axes) sur lequel tracer la sélection de la période.
         
     Return
@@ -198,8 +198,8 @@ def spectre_amplitude(t, y, T, tmin=0, plot_period_axes=None):
     if tmax>t[-1]:
         raise ValueError("Valeur de tmin trop grande")
     
-    if plot_period_axes != None:
-        plot_period_axes.axvspan(tmin, tmax , color='linen')
+    if plot_period_ax != None:
+        plot_period_ax.axvspan(tmin, tmax , color='linen')
     
     y = y[(t >= tmin) & (t < tmax)]  # Sélection sur une période
     t = t[(t >= tmin) & (t < tmax)]  # Sélection sur une période
@@ -213,7 +213,7 @@ def spectre_amplitude(t, y, T, tmin=0, plot_period_axes=None):
 
 
 
-def spectre_RMS(t, y, T, tmin=0, plot_period_axes=None):
+def spectre_RMS(t, y, T, tmin=0, plot_period_ax=None):
     ''' Retourne le spectre RMS d'un signal y(t).
     
     Parameters
@@ -230,7 +230,7 @@ def spectre_RMS(t, y, T, tmin=0, plot_period_axes=None):
     tmin : float, optionnel (0 par défaut)
         Borne inférieure le calcul du spectre.
 
-    plot_period_axes : matplotlib.axes, optionnel (None par défaut)
+    plot_period_ax : matplotlib.axes, optionnel (None par défaut)
         Repère (axes) sur lequel tracer la sélection de la période.
         
     Return
@@ -249,8 +249,8 @@ def spectre_RMS(t, y, T, tmin=0, plot_period_axes=None):
     if tmax>t[-1]:
         raise ValueError("Valeur de tmin trop grande")
     
-    if plot_period_axes != None:
-        plot_period_axes.axvspan(tmin, tmax , color='linen')
+    if plot_period_ax != None:
+        plot_period_ax.axvspan(tmin, tmax , color='linen')
     
     y = y[(t >= tmin) & (t < tmax)]  # Sélection sur une période
     t = t[(t >= tmin) & (t < tmax)]  # Sélection sur une période
@@ -265,7 +265,7 @@ def spectre_RMS(t, y, T, tmin=0, plot_period_axes=None):
 
 
 
-def spectre_RMS_dBV(t, y, T, tmin=0, plot_period_axes=None):
+def spectre_RMS_dBV(t, y, T, tmin=0, plot_period_ax=None):
     ''' Retourne le spectre RMS en dBV d'un signal y(t).
     
     Parameters
@@ -282,7 +282,7 @@ def spectre_RMS_dBV(t, y, T, tmin=0, plot_period_axes=None):
     tmin : float, optionnel (0 par défaut)
         Borne inférieure le calcul du spectre.
 
-    plot_period_axes : matplotlib.axes, optionnel (None par défaut)
+    plot_period_ax : matplotlib.axes, optionnel (None par défaut)
         Repère (axes) sur lequel tracer la sélection de la période.
         
     Return
@@ -300,8 +300,8 @@ def spectre_RMS_dBV(t, y, T, tmin=0, plot_period_axes=None):
     if tmax>t[-1]:
         raise ValueError("Valeur de tmin trop grande")
     
-    if plot_period_axes != None:
-        plot_period_axes.axvspan(tmin, tmax , color='linen')
+    if plot_period_ax != None:
+        plot_period_ax.axvspan(tmin, tmax , color='linen')
     
     y = y[(t >= tmin) & (t < tmax)]  # Sélection sur une période
     t = t[(t >= tmin) & (t < tmax)]  # Sélection sur une période

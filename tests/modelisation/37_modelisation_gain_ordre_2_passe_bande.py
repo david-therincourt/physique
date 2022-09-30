@@ -11,12 +11,13 @@ G = 20*np.log10(Us/Ue)
 
 
 ### MODELISATION ###
-G0, f0, m = ajustement_gain_ordre2_passe_bande(f, G, plot_axes=plt)
+G0, f0, m = ajustement_gain_ordre2_passe_bande(f, G, plot_ax=plt)
 print("G0 = {} \t f0 = {} \t m = {}".format(G0, f0, m))
 
 
 ### COURBE ###
 plt.plot(f, G, '+')
+plt.legend()
 plt.xscale('log')
 plt.grid()
 plt.show()

@@ -7,7 +7,7 @@ t, u = load_oscillo_csv('scope_integre.csv')
 f = 125
 T = 1/f
 
-aire = integre(t, u, 0, T, plot_axes=plt)
+aire = integre(t, u, 0, T, plot_ax=plt)
 print("aire = {:.2e}".format(aire))
 moy = aire/T
 print("moy = {:.2f} V".format(moy))
