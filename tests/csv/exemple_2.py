@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from physique import load_avimeca3_txt
+from physique.csv import load_avimeca3_txt
 
 t, x, y = load_avimeca3_txt('data1_avimeca3.txt')
 

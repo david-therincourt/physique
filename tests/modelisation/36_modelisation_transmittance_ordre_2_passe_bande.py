@@ -16,7 +16,7 @@ print("T0 = {} \t f0 = {} \t m = {}".format(T0, f0, m))
 
 
 ### COURBE ###
-plt.plot(f, T, '+')
+plt.plot(f, T, '+', label='Mesures')
 plt.legend()
 plt.xscale('log')
 plt.grid()

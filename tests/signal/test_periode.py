@@ -1,11 +1,12 @@
-import numpy as np
 import matplotlib.pyplot as plt
-from physique import load_oscillo_csv, periode
+from physique.csv import load_oscillo_csv
+from physique.signal import periode
 
 t, u = load_oscillo_csv('scope_periode.csv')
 t=t*1000
 
-T = periode(t, u, draw_period_ax=plt, draw_period_start=0)
+T = periode(u, t, draw_period_ax=plt, draw_period_start=0)
+print(T)
 
 plt.plot(t, u)
 

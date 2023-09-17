@@ -24,7 +24,7 @@
 # THE SOFTWARE.
 
 """
-Module de modélisation de courbes pour la physique appliquée
+Module de modélisation de courbes pour la physique
 
 Example
 -------
@@ -38,31 +38,47 @@ import numpy as np
 from scipy.stats import linregress
 from scipy.optimize import curve_fit
 from physique.fonctions import *
+from math import log10
 
 
 
 def _pround(x, n):
     """ Convertit un flottant en une chaîne de caractères avec n chiffres significatifs. 
     """
+    x = float(x)
     x0 = abs(x)
     
-    if x0<1:
-        ch = "{:." + str(n-1)+"E}"
+    if x0<0.01:
+        ch = "{:." + str(n-1) + "e}"
         x_str = ch.format(x)
-    if 1<=x0<10:
-        x_str = str(round(x, n-1))
-    elif 10<=x0<100:
-        x_str = str(round(x, n-2))
-    elif 100<=x0<1000:
-        x_str = str(round(x, n-3))
-    elif 1000<=x0:
-        ch = "{:." + str(n-1)+"E}"
+        
+    if 0.01<=x0<1:
+        p = int(log10(x0))
+        x_str = str(round(x, n-1-p))
+        t = x_str.split(".")
+        t = t[1].split("0")
+        nx = len(t[-1])
+        if nx<n:
+            x_str += "0"*(n-nx)
+            
+    if 1<=x0<10000:
+        p = int(log10(x0))
+        x_str = str(round(x, n-1-p))
+        t = x_str.split(".")
+        if len(t[0])>=n:
+            x_str = x_str[:-2]
+        nx = len(t[0]+t[1])
+        if nx<n:
+            x_str += "0"*(n-nx)
+            
+    elif 10000<=x0:
+        ch = "{:." + str(n-1)+"e}"
         x_str = ch.format(x)
         
     return x_str
 
 
-# Ajustement suivante une fonction linéaire
+# Ajustement suivant une fonction linéaire
 def ajustement_lineaire(x, y, a_p0=1, plot_ax=None, plot_xmin=None, plot_xmax=None, plot_nb_pts=100, return_line=False):
     """
     Modélisation d'une série de points (x,y) par une fonction linéaire du type :
@@ -104,7 +120,7 @@ def ajustement_lineaire(x, y, a_p0=1, plot_ax=None, plot_xmin=None, plot_xmax=No
         y_mod = a*x_mod
         
         n = 4
-        str_modele = r"$y=a\cdot x$" + "\n"
+        str_modele = r"$y=a\cdot x$" + r"$\qquad$"
         str_params = "a=" + _pround(a[0],n)
         line = plot_ax.plot(x_mod, y_mod, label=str_modele+str_params)
         
@@ -115,7 +131,7 @@ def ajustement_lineaire(x, y, a_p0=1, plot_ax=None, plot_xmin=None, plot_xmax=No
 
 
 
-# Ajustement suivante une fonction affine
+# Ajustement suivant une fonction affine
 def ajustement_affine(x, y, plot_ax=None, plot_xmin=None, plot_xmax=None, plot_nb_pts=100, return_line=False):
     """
     Modélisation d'une fonction affine de la forme :
@@ -162,7 +178,7 @@ def ajustement_affine(x, y, plot_ax=None, plot_xmin=None, plot_xmax=None, plot_n
     return a, b
 
 
-# Ajustement suivante une fonction parabolique
+# Ajustement suivant une fonction parabolique
 def ajustement_parabolique(x, y, plot_ax=None, plot_xmin=None, plot_xmax=None, plot_nb_pts=100, return_line=False):
     """
     Modélisation d'une fonction parabolique du type :
@@ -212,7 +228,7 @@ def ajustement_parabolique(x, y, plot_ax=None, plot_xmin=None, plot_xmax=None, p
     return a, b, c
 
 
-# Ajustement suivante une fonction exponentielle croissante
+# Ajustement suivant une fonction exponentielle croissante
 def ajustement_exponentielle_croissante(x, y, A_p0=1, tau_p0=1, plot_ax=None, plot_xmin=None, plot_xmax=None, plot_nb_pts=100, return_line=False) :
     """
     Modélisation d'une série de points (x,y) par une fonction exponentielle croissante
@@ -263,7 +279,7 @@ def ajustement_exponentielle_croissante(x, y, A_p0=1, tau_p0=1, plot_ax=None, pl
 
     return A, tau
 
-# Ajustement suivante une fonction exponentielle croissante avec décalage
+# Ajustement suivant une fonction exponentielle croissante avec décalage
 def ajustement_exponentielle_croissante_x0(x, y, A_p0=1, tau_p0=1, x0_p0=0, plot_ax=None, plot_xmin=None, plot_xmax=None, plot_nb_pts=100, return_line=False) :
     """
     Modélisation d'une série de points (x,y) par une fonction exponentielle croissante
@@ -316,7 +332,7 @@ def ajustement_exponentielle_croissante_x0(x, y, A_p0=1, tau_p0=1, x0_p0=0, plot
     return A, tau, x0
 
 
-# Ajustement suivante une fonction exponentielle décroissante
+# Ajustement suivant une fonction exponentielle décroissante
 def ajustement_exponentielle_decroissante(x, y, A_p0=1, tau_p0=1, plot_ax=None, plot_xmin=None, plot_xmax=None, plot_nb_pts=100, return_line=False):
     """
     Modélisation d'une série de points (x,y) par une fonction exponentielle décroissante
@@ -369,7 +385,7 @@ def ajustement_exponentielle_decroissante(x, y, A_p0=1, tau_p0=1, plot_ax=None, 
     return A, tau
 
 
-# Ajustement suivante une fonction exponentielle décroissante avec décalage
+# Ajustement suivant une fonction exponentielle décroissante avec décalage
 def ajustement_exponentielle_decroissante_x0(x, y, A_p0=1, tau_p0=1, x0_p0=1, plot_ax=None, plot_xmin=None, plot_xmax=None, plot_nb_pts=100, return_line=False) :
     """
     Modélisation d'une série de points (x,y) par une fonction exponentielle décroissante
@@ -430,7 +446,7 @@ def ajustement_exponentielle_decroissante_x0(x, y, A_p0=1, tau_p0=1, x0_p0=1, pl
 #################################################################
 
 
-# Ajustement suivante une fonction de transmittance d'un système d'ordre 1 passe-bas
+# Ajustement suivant une fonction de transmittance d'un système d'ordre 1 passe-bas
 def ajustement_transmittance_ordre1_passe_bas(f, T, T0_p0=1, f0_p0=1, plot_ax=None, plot_fmin=None, plot_fmax=None, plot_xlog=True, plot_nb_pts=100, return_line=False):
     """
     Modélisation d'une série de points (f,T) par une fonction de transmittance

@@ -26,6 +26,41 @@
 """
 Module pour le traitement des signaux.
 
+Fonctions
+---------
+
+    periode(t, y)
+
+        | Renvoie le période T du signal périodique y(t) par une méthode d'autocorrélation.
+        | Le signal y(t) doit comporter au moins deux motifs de période.
+
+
+    derive(y, x)
+        
+        | Retourne la dérivée de la fonction f(x) avec l'approximation :
+        | dy/dx = (y[n+1]-y[n-1])/(x[n+1]-x[n-1])
+
+
+    integrale(y, x, xmin, xmax)
+
+        | Calcule une approximation l'intégrale de la fonction y=f(x) entre
+        | les bornes xmin et xmax avec la méthode des trapèzes.
+ 
+ 
+    spectre_amplitude(y, t, T)
+        
+        | Retourne le spectre d'amplitude d'un signal y(t).
+ 
+ 
+    spectre_RMS(y, t, T, tmin=0, plot_period_ax=None)
+        
+        | Retourne le spectre RMS d'un signal y(t).
+        
+        
+    spectre_RMS_dBV(y, t, T, tmin=0, plot_period_ax=None):
+        
+        | Retourne le spectre RMS en dBV d'un signal y(t).
+
 Example
 -------
 
@@ -37,49 +72,23 @@ T = periode(t, u)
 """
 
 import numpy as np
-from scipy.integrate import trapz
 from numpy.fft import fft
+from scipy.integrate import trapz
+from scipy.signal import correlate, find_peaks, peak_prominences
 
 
-def _autocorrelation(y, N, i, M):
-    """
-    Fonction d'autocorrélation d'un signal y.
-    
-    Parameters
-    ----------
-    y : numpy.ndarray
-        Signal
-    N : int
-        Nombre de point de la fonction d'autocorrélation
-    i : int
-        Indice départ (i>N)
-    M : int
-        Nombre de points de la fonction d'autocorrélation
-        
-    Returns
-    -------
-    c : numpy.ndarray
-        Fonction d'autocorrélation
-    """
-    C = np.zeros(N)
-    for k in range(i,i+M):
-        for n in range(N):
-            C[n] += y[k]*y[k-n]
-    return C
 
-
-def periode(t, y, draw_period_ax=None, draw_period_start=None, draw_period_color="linen"):
+def periode(y, t, draw_period_ax=None, draw_period_start=None, draw_period_color="linen"):
     """ Renvoie le période T du signal périodique y(t) par une méthode d'autocorrélation.
-    Le signal y(t) doit comporter au moins deux motifs.
-    Un nombre important de motifs peut donner des erreurs !
+    Le signal y(t) doit comporter au moins deux motifs de période.
     
     Parameters
     ----------
-    t : numpy.ndarray
-        Tableau des temps.
-
     y : numpy.ndarray
         Tableau des valeurs du signal.
+    
+    t : numpy.ndarray
+        Tableau des temps.
 
     draw_period_ax  : matplotlib.axes, optionnel (None par défaut)
         Repère (axes) pour dessiner la période.
@@ -97,38 +106,74 @@ def periode(t, y, draw_period_ax=None, draw_period_start=None, draw_period_color
     """
 
     Te = t[1]-t[0]             # Période d'échantillonnage
-    Ns = len(t)                # Nb points total
-    N = Ns//2                  # Nb points pour autocorrélation = moitié
-    tau = t[0:N]               # Retard de la fonction d'autocorrélation
+    N = len(t)                # Nb points total
+
+    Cn = correlate(y, y, mode='same', method='auto')
+    Cn = Cn[N//2:]
     
-    c = _autocorrelation(y, N, N, Ns-N)
-    
-    na = N//100                              # On saute les premiers indices (10%) pour la recherche du prochain maximum !
-    c_max = np.max(c[na:])                   # Maximum de c
-    Np = na + np.where(c[na:]==c_max)[0][0]  # Recherche indice (premier) maximum
-    T = Np*Te                                # Calcul de la période
+    peaks, _ = find_peaks(Cn)
+    prominences = peak_prominences(Cn, peaks)[0]
+    n_prom_max = np.where(prominences == max(prominences))
+    Np = int(peaks[n_prom_max])
+    T = Np*Te                               
     
     if draw_period_start == None:
         draw_period_start = t[0]
         
     if draw_period_ax != None:
         draw_period_ax.axvspan(draw_period_start, draw_period_start+T , color=draw_period_color)
+        draw_period_ax.axvline(draw_period_start, color="gray", ls="--")
+        draw_period_ax.axvline(draw_period_start+T, color="gray", ls="--")
         
     return T
 
 
 
-def integre(x, y, xmin, xmax, plot_ax=None):
-    """ Calcule numériquement l'intégrale de la fonction y=f(x) entre
+
+def derive(y, x):
+    """ Retourne la dérivée de la fonction f(x) avec l'approximation :
+    
+                  dy/dx = (y[n+1]-y[n-1])/(x[n+1]-x[n-1])
+
+    Parameters
+    ----------
+
+    y : numpy.ndarray
+        Tableau Numpy des y.
+    
+    x : numpy.ndarray
+        Tableau Numpy des x.
+
+    Return
+    ------
+    d : numpy.ndarray
+        Tableau Numpy de même dimension. La valeur Nan (Not A Number) est affectée
+        pour la première valeur et la dernière valeur du tableau où la derivée n'est
+        pas calculable !
+    """
+    
+    N = len(y)
+    d = [float('nan') for i in range(N)]
+    for i in range(1, len(y)-1):
+        d[i] = (y[i+1]-y[i-1])/(x[i+1]-x[i-1])
+    return d
+
+
+
+
+
+def integrale(y, x, xmin, xmax, plot_ax=None):
+    """ Calcule une approximation l'intégrale de la fonction y=f(x) entre
     les bornes xmin et xmax avec la méthode des trapèzes.
     
     Parameters
     ----------
+    y : numpy.ndarray
+        Tableau Numpy des y.
+        
     x : numpy.ndarray
         Tableau Numpy des x.
 
-    y : numpy.ndarray
-        Tableau Numpy des y.
     xmin : float
         Borne inférieure pour l'intégration.
 
@@ -162,16 +207,16 @@ def integre(x, y, xmin, xmax, plot_ax=None):
 
 
 
-def spectre_amplitude(t, y, T, tmin=0, plot_period_ax=None):
+def spectre_amplitude(y, t, T, tmin=0, plot_period_ax=None):
     ''' Retourne le spectre d'amplitude d'un signal y(t).
     
     Parameters
     ----------
-    t : numpy.ndarray
-        Tableau des temps.
-
     y : numpy.ndarray
         Tableau des valeurs du signal.
+        
+    t : numpy.ndarray
+        Tableau des temps.
 
     T : float
         Période du signal.
@@ -206,23 +251,25 @@ def spectre_amplitude(t, y, T, tmin=0, plot_period_ax=None):
     T = t[-1]-t[0]                   # Durée totale
     N = len(t)                       # Nb points
     freq = np.arange(N)*1.0/T        # Tableau des fréquences
-    ampl = np.absolute(fft(y))/N     # Tableau des amplitudes
-    ampl[1:-1] = ampl[1:-1]*2        #
+    ampl = np.absolute(fft(y))/N     # 
+    ampl[1:-1] = ampl[1:-1]*2        # Tableau des amplitudes
     
     return freq, ampl                # Retourne fréquences et amplitudes
 
 
 
-def spectre_RMS(t, y, T, tmin=0, plot_period_ax=None):
+
+
+def spectre_RMS(y, t, T, tmin=0, plot_period_ax=None):
     ''' Retourne le spectre RMS d'un signal y(t).
     
     Parameters
     ----------
-    t : numpy.ndarray
-        Tableau Numpy des t.
-
     y : numpy.ndarray
         Tableau Numpy des y.
+        
+    t : numpy.ndarray
+        Tableau Numpy des t.
 
     T : float
         Période du signal y.
@@ -257,24 +304,27 @@ def spectre_RMS(t, y, T, tmin=0, plot_period_ax=None):
     T = t[-1]-t[0]                   # Durée totale
     N = len(t)                       # Nb points
     freq = np.arange(N)*1.0/T        # Tableau des fréquences
-    ampl = np.absolute(fft(y))/N     # Tableau des amplitudes
-    ampl[1:-1] = ampl[1:-1]*2        #
-    
-    return freq, ampl/np.sqrt(2)     # Retourne fréquences et valeurs RMS
+    eff = np.absolute(fft(y))/N      # 
+    eff[1:-1] = eff[1:-1]*np.sqrt(2) # Tableau des val. eff.
+        
+    return freq, eff                 # Retourne fréquences et valeurs RMS
 
 
 
 
-def spectre_RMS_dBV(t, y, T, tmin=0, plot_period_ax=None):
+
+
+
+def spectre_RMS_dBV(y, t, T, tmin=0, plot_period_ax=None):
     ''' Retourne le spectre RMS en dBV d'un signal y(t).
     
     Parameters
     ----------
-    t : numpy.ndarray
-        Tableau Numpy de t.
-
     y : numpy.ndarray
         Tableau Numpy de y.
+        
+    t : numpy.ndarray
+        Tableau Numpy de t.
 
     T : float
         Période du signal y.
@@ -308,8 +358,7 @@ def spectre_RMS_dBV(t, y, T, tmin=0, plot_period_ax=None):
     T = t[-1]-t[0]                   # Durée totale
     N = len(t)                       # Nb points
     freq = np.arange(N)*1.0/T        # Tableau des fréquences
-    ampl = np.absolute(fft(y))/N     # Tableau des amplitudes
-    ampl[1:-1] = ampl[1:-1]*2        #Tableau des amplitudes
-    ampl[1:-1] = ampl[1:-1]*2        #
+    eff = np.absolute(fft(y))/N      # 
+    eff[1:-1] = eff[1:-1]*np.sqrt(2) # Tableau des val. eff.
     
-    return freq, 20*np.log10(ampl/np.sqrt(2))     # Retourne fréquences et valeurs RMS dBV
+    return freq, 20*np.log10(eff)     # Retourne fréquences et valeurs RMS dBV

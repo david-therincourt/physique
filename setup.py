@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="physique", # Replace with your own username
-    version="0.5.4",
+    version="0.5.9",
     author="David THERINCOURT",
     author_email="dtherincourt@gmail.com",
     description="Librairie Python pour les sciences physiques",
