@@ -46,15 +46,11 @@ Fonctions pour réaliser une modélisation d'une courbe du type `y=f(x)`.
 
 `ajustement_dephasage_ordre1_passe_bas(f, phi)`
 
-
-
 `ajustement_transmittance_ordre1_passe_haut(f, T)`
 
 `ajustement_gain_ordre1_passe_haut(f, G)`
 
 `ajustement_dephasage_ordre1_passe_haut(f, phi)`
-
-
 
 `ajustement_transmittance_ordre2_passe_bas(f, T)`
 
@@ -139,8 +135,6 @@ Le fichier `data.txt` a été exporté du logiciel Avimeca 3 à partir d'un exem
 Module Module pour le traitement des signaux.
 
 ### > Fonctions disponibles
-
-`periode(y, t)`
 
 `derive(y, t)`
 

@@ -29,12 +29,6 @@ Module pour le traitement des signaux.
 Fonctions
 ---------
 
-    periode(t, y)
-
-        | Renvoie le période T du signal périodique y(t) par une méthode d'autocorrélation.
-        | Le signal y(t) doit comporter au moins deux motifs de période.
-
-
     derive(y, x)
         
         | Retourne la dérivée de la fonction f(x) avec l'approximation :
@@ -66,66 +60,15 @@ Example
 
 from physique.signal import load_oscillo_csv, periode
 t, u = load_oscillo_csv('scope.csv')
-T = periode(t, u)
+v = derive(u, t)
         
-@author: David Thérincourt - 2022
+@author: David Thérincourt - 2023
 """
 
 import numpy as np
 from numpy.fft import fft
 from scipy.integrate import trapz
 from scipy.signal import correlate, find_peaks, peak_prominences
-
-
-
-def periode(y, t, draw_period_ax=None, draw_period_start=None, draw_period_color="linen"):
-    """ Renvoie le période T du signal périodique y(t) par une méthode d'autocorrélation.
-    Le signal y(t) doit comporter au moins deux motifs de période.
-    
-    Parameters
-    ----------
-    y : numpy.ndarray
-        Tableau des valeurs du signal.
-    
-    t : numpy.ndarray
-        Tableau des temps.
-
-    draw_period_ax  : matplotlib.axes, optionnel (None par défaut)
-        Repère (axes) pour dessiner la période.
-
-    draw_period_start : float, optionnel (None par défaut)
-        Abscisse de début pour dessiner la période.
-
-    draw_period_color : matplotlib color, optionnel ("linen" par défaut)
-        Couleur pour dessiner la période.
-        
-    Return
-    -------
-    T : float
-        Valeur de la période calculée.
-    """
-
-    Te = t[1]-t[0]             # Période d'échantillonnage
-    N = len(t)                # Nb points total
-
-    Cn = correlate(y, y, mode='same', method='auto')
-    Cn = Cn[N//2:]
-    
-    peaks, _ = find_peaks(Cn)
-    prominences = peak_prominences(Cn, peaks)[0]
-    n_prom_max = np.where(prominences == max(prominences))
-    Np = int(peaks[n_prom_max])
-    T = Np*Te                               
-    
-    if draw_period_start == None:
-        draw_period_start = t[0]
-        
-    if draw_period_ax != None:
-        draw_period_ax.axvspan(draw_period_start, draw_period_start+T , color=draw_period_color)
-        draw_period_ax.axvline(draw_period_start, color="gray", ls="--")
-        draw_period_ax.axvline(draw_period_start+T, color="gray", ls="--")
-        
-    return T
 
 
 

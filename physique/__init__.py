@@ -32,25 +32,9 @@ Example
 from physique import ajustement_lineaire
 
 
-@author: David Thérincourt - 2022
+@author: David Thérincourt - 2023
 """
 
 import physique.csv
 import physique.modelisation
 import physique.signal
-
-# from physique.csv import load_txt, load_avimeca3_txt, load_regavi_txt, load_regressi_txt, load_regressi_csv
-# from physique.csv import load_oscillo_csv, load_ltspice_csv
-# from physique.csv import save_txt
-# 
-# from physique.modelisation import ajustement_lineaire, ajustement_affine, ajustement_parabolique
-# from physique.modelisation import ajustement_exponentielle_croissante, ajustement_exponentielle_croissante_x0
-# from physique.modelisation import ajustement_exponentielle_decroissante, ajustement_exponentielle_decroissante_x0
-# from physique.modelisation import ajustement_transmittance_ordre1_passe_bas, ajustement_gain_ordre1_passe_bas, ajustement_dephasage_ordre1_passe_bas
-# from physique.modelisation import ajustement_transmittance_ordre1_passe_haut, ajustement_gain_ordre1_passe_haut, ajustement_dephasage_ordre1_passe_haut
-# from physique.modelisation import ajustement_transmittance_ordre2_passe_bas
-# from physique.modelisation import ajustement_transmittance_ordre2_passe_haut
-# from physique.modelisation import ajustement_transmittance_ordre2_passe_bande, ajustement_gain_ordre2_passe_bande
-# 
-# from physique.signal import periode, derive, integrale
-# from physique.signal import spectre_amplitude, spectre_RMS, spectre_RMS_dBV
