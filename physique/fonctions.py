@@ -24,94 +24,160 @@
 # THE SOFTWARE.
 
 """
-Module de modélisation de courbes pour la physique appliquée
+Fonctions mathématique
 
 @author: David Thérincourt
 """
 
 import numpy as np
 
-
 #--------------------------
 # Fonctions mathématiques
 #--------------------------
 
-# Fonction linéaire : y=a*x
-def fct_lineaire(x, a) :
-    """
-    Fonction lineaire du type y = a*x
 
-    Paramètres :
-    x (liste ou tableau Numpy) : abscisses.
-    a (float) :
-
-    Retourne :
-    Valeur de la fonction (float ou tableau Numpy)
-    """
+def lineaire(x, params) :
+    a = params
     return a*x
 
+def affine(x, *args):
+    a, b = args
+    return a*x + b
 
-# # Fonction parabolique : y = ax^2 + bx  + c
-# def fct_parabole(x, a, b, c) :
-#     """
-#     Fonction parabolique du type y = a*x**2 + b*x + c
-
-#     Paramètres :
-#     x (liste ou tableau Numpy) : abscisses.
-#     a (float) :
-#     b (float) :
-#     c (float) :
-
-#     Retourne :
-#     Valeur de la fonction (float ou tableau Numpy)
-#     """
-#     return a*x**2+b*x+c
+def parabole(x, *args) :
+    a, b, c = args
+    return a*x**2+b*x+c
 
 
-
-# Fonction exponentielle croissante : y = A*(1-exp(-(x-x0)/tau))
-def fct_exponentielle_croissante(x, A, tau, x0=0):
+def exponentielle_croissante(x, *args):
     """
-    Fonction exponenetielle croissante du type y = A*(1-exp(-(x-x0)/tau))
+    Fonction exponentielle croissante du type y = A*(1-exp(-x/tau))
 
     Paramètres :
     x (liste ou tableau Numpy) : abscisses.
     A (float)  : limite à l'infini.
     tau (float) : constante de temps.
 
-    Paramètre optionnel :
-    x0 (0 par défaut) : retard.
-
     Retourne :
     Valeur de la fonction (float ou tableau Numpy)
     """
+    A, tau = args
+    return A*(1-np.exp(-x/tau))
+
+def exponentielle_croissante_x0(x, *args):
+    """
+    Fonction exponentielle croissante du type y = A*(1-exp(-(x-x0)/tau))
+
+    Paramètres :
+    x (liste ou tableau Numpy) : abscisses.
+    A (float)  : limite à l'infini.
+    tau (float) : constante de temps.:
+    x0 (float) : retard.
+    
+    Retourne :
+    Valeur de la fonction (float ou tableau Numpy)
+    """
+    A, tau, x0 = args
     return A*(1-np.exp(-(x-x0)/tau))
 
-# Fonction exponentielle décroissante : y = A*exp(-(x-x0)/tau)
-def fct_exponentielle_decroissante(x, A, tau, x0=0):
+
+def exponentielle_decroissante(x, *args):
     """
-    Fonction exponenetielle décroissante du type y = A*exp(-(x-x0)/tau)
+    Fonction exponentielle décroissante du type y = A*exp(-x/tau)
 
     Paramètres :
     x (liste ou tableau Numpy) : abscisses.
     A (float)  : limite à l'infini.
     tau (float) : constante de temps.
 
-    Paramètre optionnel :
-    x0 (0 par défaut) : retard.
+    Retourne :
+    Valeur de la fonction (float ou tableau Numpy)
+    """
+    A, tau = args
+    return A*np.exp(-x/tau)
+
+def exponentielle_decroissante_x0(x, *args):
+    """
+    Fonction exponentielle décroissante du type y = A*exp(-(x-x0)/tau)
+
+    Paramètres :
+    x (liste ou tableau Numpy) : abscisses.
+    A (float)  : limite à l'infini.
+    tau (float) : constante de temps.
+    x0 (float) : retard.
 
     Retourne :
     Valeur de la fonction (float ou tableau Numpy)
     """
+    A, tau, x0 = args
     return A*np.exp(-(x-x0)/tau)
 
+def exponentielle2_croissante(x, *args):
+    """
+    Fonction exponentielle croissante du type y = A*(1-exp(-k*x))
+
+    Paramètres :
+    x (liste ou tableau Numpy) : abscisses.
+    A (float)  : limite à l'infini.
+    k (float) : coefficient.
+    
+    Retourne :
+    Valeur de la fonction (float ou tableau Numpy)
+    """
+    A, k = args
+    return A*(1-np.exp(-k*x))
+
+def exponentielle2_croissante_x0(x, *args):
+    """
+    Fonction exponentielle croissante du type y = A*(1-exp(-k*(x-x0)))
+
+    Paramètres :
+    x (liste ou tableau Numpy) : abscisses.
+    A (float)  : limite à l'infini.
+    k (float) : coefficient.
+    x0 (float) : retard.
+    
+    Retourne :
+    Valeur de la fonction (float ou tableau Numpy)
+    """
+    A, k, x0 = args
+    return A*(1-np.exp(-k*(x-x0)))
 
 
+def exponentielle2_decroissante(x, *args):
+    """
+    Fonction exponentielle décroissante du type y = A*exp(-k*x))
+
+    Paramètres :
+    x (liste ou tableau Numpy) : abscisses.
+    A (float)  : limite à l'infini.
+    k (float) : coefficient.
+    
+    Retourne :
+    Valeur de la fonction (float ou tableau Numpy)
+    """
+    A, k = args
+    return A*np.exp(-k*x)
+
+def exponentielle2_decroissante_x0(x, *args):
+    """
+    Fonction exponentielle décroissante du type y = A*exp(-k*(x-x0)))
+
+    Paramètres :
+    x (liste ou tableau Numpy) : abscisses.
+    A (float)  : limite à l'infini.
+    k (float) : coefficient.
+    x0 (float) : retard.
+    
+    Retourne :
+    Valeur de la fonction (float ou tableau Numpy)
+    """
+    A, k, x0 = args
+    return A*np.exp(-k*(x-x0))
 
 
 ############## Ordre 1 - Passe-bas  ################
-
-def transmittance_ordre1_passe_bas(f, T0, f0):
+def transmittance_ordre1_passe_bas(f, *args):
     """
     Fonction transmittance d'un système d'ordre 1 passe-bas
 
@@ -123,9 +189,11 @@ def transmittance_ordre1_passe_bas(f, T0, f0):
     Retourne :
         T (float)
     """
+    T0, f0 = args
     return T0/np.sqrt(1+(f/f0)**2)
 
-def gain_ordre1_passe_bas(f, G0, f0):
+
+def gain_ordre1_passe_bas(f, *args):
     """
     Fonction gain d'un système d'ordre 1 passe-bas
 
@@ -139,9 +207,10 @@ def gain_ordre1_passe_bas(f, G0, f0):
     Retourne :
         G (float)
     """
+    G0, f0 = args
     return G0 - 20*np.log10(np.sqrt(1+(f/f0)**2))
 
-def dephasage_ordre1_passe_bas(f, f0):
+def dephasage_ordre1_passe_bas(f, *args):
     """
     Fonction déphasage d'un système d'ordre 1 passe-bas
 
@@ -154,15 +223,12 @@ def dephasage_ordre1_passe_bas(f, f0):
     Retourne :
         phi en degré (float)
     """
+    f0 = args[0]
     return -np.arctan(f/f0)*180/np.pi
 
 
-
-
-
 ############## Ordre 1 - Passe-haut  ################
-
-def transmittance_ordre1_passe_haut(f, T0, f0):
+def transmittance_ordre1_passe_haut(f, *args):
     """
     Fonction transmittance d'un système d'ordre 1 passe-haut.
 
@@ -174,10 +240,11 @@ def transmittance_ordre1_passe_haut(f, T0, f0):
     Retourne :
     Valeur de la fonction (float ou tableau Numpy)
     """
+    T0, f0 = args
     return T0*(f/f0)/np.sqrt(1+(f/f0)**2)
 
 
-def gain_ordre1_passe_haut(f, G0, f0):
+def gain_ordre1_passe_haut(f, *args):
     """
     Fonction gain d'un système d'ordre 1 passe-haut.
 
@@ -191,10 +258,11 @@ def gain_ordre1_passe_haut(f, G0, f0):
     Retourne :
         G (float)
     """
+    G0, f0 = args
     return G0 + 20*np.log10(f/f0) - 20*np.log10(np.sqrt(1+(f/f0)**2))
 
 
-def dephasage_ordre1_passe_haut(f, f0):
+def dephasage_ordre1_passe_haut(f, ):
     """
     Fonction déphasage d'un système d'ordre 1 passe-haut.
 
@@ -207,13 +275,14 @@ def dephasage_ordre1_passe_haut(f, f0):
     Retourne :
         phi en degré (float)
     """
+    f0 = args[0]
     return 90 - np.arctan(f/f0)*180/np.pi
 
 
 
-############## Ordre 2 - Passe-bas  ################
 
-def transmittance_ordre2_passe_bas(f, T0, f0, m):
+############## Ordre 2 - Passe-bas  ################
+def transmittance_ordre2_passe_bas(f, *args):
     """
     Fonction transmittance d'un système d'ordre 2 passe bas.
 
@@ -226,12 +295,12 @@ def transmittance_ordre2_passe_bas(f, T0, f0, m):
     Retourne :
         T (float)
     """
+    T0, f0, m = args
     return T0/np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2)
 
-def gain_ordre2_passe_bas(f, G0, f0, m):
+def gain_ordre2_passe_bas(f, *args):
     """
     Fonction gain d'un système d'ordre 2 passe bas.
-
 
     Paramètres :
         f (liste ou tableau Numpy) : fréquence.
@@ -242,13 +311,13 @@ def gain_ordre2_passe_bas(f, G0, f0, m):
     Retourne :
         G (float)
     """
+    G0, f0, m = args
     return G0 - 20*np.log10(np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2))
 
 
-def dephasage_ordre2_passe_bas(f, f0, m):
+def dephasage_ordre2_passe_bas(f, *args):
     """
     Fonction déphasage d'un système d'ordre 2 passe bas.
-
 
     Paramètres :
         f  (liste ou tableau Numpy) : fréquence.
@@ -258,14 +327,12 @@ def dephasage_ordre2_passe_bas(f, f0, m):
     Retourne :
         phi en degré (float)
     """
+    f0, m = args
     return -np.arctan((2*m*f/f0)/(1-(f/f0)**2))*180/np.pi
 
 
-
-
 ############## Ordre 2 - Passe-haut  ################
-
-def transmittance_ordre2_passe_haut(f, T0, f0, m):
+def transmittance_ordre2_passe_haut(f, *args):
     """
     Fonction transmittance d'un système d'ordre 2 passe-haut.
 
@@ -278,10 +345,11 @@ def transmittance_ordre2_passe_haut(f, T0, f0, m):
     Retourne :
         T (float)
     """
+    T0, f0, m = args
     return -T0*(f/f0)**2/np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2)
 
 
-def gain_ordre2_passe_haut(f, G0, f0, m):
+def gain_ordre2_passe_haut(f, *args):
     """
     Fonction gain d'un système d'ordre 2 passe-haut.
 
@@ -295,10 +363,11 @@ def gain_ordre2_passe_haut(f, G0, f0, m):
     Retourne :
         G (float)
     """
+    G0, f0, m = args
     return G0 + 20*np.log10((f/f0)**2) - 20*np.log10(np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2))
 
 
-def dephasage_ordre2_passe_haut(f, f0, m):
+def dephasage_ordre2_passe_haut(f, *args):
     """
     Fonction déphasage d'un système d'ordre 2 passe-haut.
 
@@ -311,13 +380,12 @@ def dephasage_ordre2_passe_haut(f, f0, m):
     Retourne :
         phi en degré (float)
     """
+    f0, m = args
     return 180 - np.arctan((2*m*f/f0)/(1-(f/f0)**2))*180/np.pi
 
 
-
 ############## Ordre 2 - Passe-bande  ################
-
-def transmittance_ordre2_passe_bande(f, T0, f0, m):
+def transmittance_ordre2_passe_bande(f, *args):
     """
     Fonction transmittance d'un système d'ordre 2 passe-bande.
 
@@ -330,10 +398,11 @@ def transmittance_ordre2_passe_bande(f, T0, f0, m):
     Retourne :
         T (float)
     """
+    T0, f0, m = args
     return T0*2*m*(f/f0)/np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2)
 
 
-def gain_ordre2_passe_bande(f, G0, f0, m):
+def gain_ordre2_passe_bande(f, *args):
     """
     Fonction gain d'un système d'ordre 2 passe-bande.
 
@@ -347,10 +416,11 @@ def gain_ordre2_passe_bande(f, G0, f0, m):
     Retourne :
         G (float)
     """
+    G0, f0, m = args
     return G0 + 20*np.log10(2*m*f/f0) - 20*np.log10(np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2))
 
 
-def dephasage_ordre2_passe_bande(f, f0, m):
+def dephasage_ordre2_passe_bande(f, *args):
     """
     Fonction déphasage d'un système d'ordre 2 passe-bande.
 
@@ -363,9 +433,5 @@ def dephasage_ordre2_passe_bande(f, f0, m):
     Retourne :
         phi en degré (float)
     """
+    f0, m = args
     return 90 - np.arctan((2*m*f/f0)/(1-(f/f0)**2))*180/np.pi
-
-
-
-
-
