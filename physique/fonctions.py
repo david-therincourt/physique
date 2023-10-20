@@ -267,7 +267,7 @@ def ordre1_passe_haut_gain(f, *args):
     return G0 + 20*np.log10(f/f0) - 20*np.log10(np.sqrt(1+(f/f0)**2))
 
 
-def ordre1_passe_haut_dephasage(f, ):
+def ordre1_passe_haut_dephasage(f, *args):
     """
     Fonction déphasage d'un système d'ordre 1 passe-haut.
 
@@ -351,7 +351,7 @@ def ordre2_passe_haut_transmittance(f, *args):
         T (float)
     """
     T0, f0, m = args
-    return -T0*(f/f0)**2/np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2)
+    return T0*(f/f0)**2/np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2)
 
 
 def ordre2_passe_haut_gain(f, *args):
@@ -439,4 +439,4 @@ def ordre2_passe_bande_dephasage(f, *args):
         phi en degré (float)
     """
     f0, m = args
-    return 90 - np.arctan((2*m*f/f0)/(1-(f/f0)**2))*180/np.pi
+    return 90 - np.arctan((2*m*f/f0)/(1-(f/f0)**2))*180/np.pi # Problème décalage pour f=f0
