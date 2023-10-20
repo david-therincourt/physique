@@ -25,8 +25,6 @@ y = [0.746,0.990,1.175,1.336,1.432,1.505,1.528,1.505,1.454,1.355,1.207,1.018,0.7
 
 modele = ajustement_parabolique(x, y)
 modele.set_nb_round(3)
-modele.set_label_latex(False)
-
 print(modele)
 
 

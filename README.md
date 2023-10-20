@@ -24,41 +24,43 @@ Fonctions pour réaliser une modélisation d'une courbe du type `y=f(x)`.
 
 ### > Bases
 
-`ajustement_lineaire(x, y)`
+`ajustement_fct_lineaire(x, y)`
 
-`ajustement_affine(x, y)`
+`ajustement_fct_affine(x, y)`
 
-`ajustement_parabolique(x, y)`
+`ajustement_fct_parabolique(x, y)`
 
-`ajustement_exponentielle_croissante(x, y)`
+`ajustement_fct_exponentielle_croissante(x, y)`
 
-`ajustement_exponentielle_croissante_x0(x, y)`
+`ajustement_fct_exponentielle_decroissante(x, y)`
 
-`ajustement_exponentielle_decroissante(x, y)`
 
-`ajustement_exponentielle_decroissante_x0(x, y)`
 
 ### > Réponses fréquentielles
 
-`ajustement_transmittance_ordre1_passe_bas(f, T)`
+`ajustement_ordre1_passe_bas_transmittance(f, T)`
 
-`ajustement_gain_ordre1_passe_bas(f, G)`
+`ajustement_ordre1_passe_bas_gain(f, G)`
 
-`ajustement_dephasage_ordre1_passe_bas(f, phi)`
+`ajustement_ordre1_passe_bas_dephasage(f, phi)`
 
-`ajustement_transmittance_ordre1_passe_haut(f, T)`
 
-`ajustement_gain_ordre1_passe_haut(f, G)`
 
-`ajustement_dephasage_ordre1_passe_haut(f, phi)`
+`ajustement_ordre1_passe_haut_transmittanc(f, T)`
 
-`ajustement_transmittance_ordre2_passe_bas(f, T)`
+`ajustement_ordre1_passe_haut_gain(f, G)`
 
-`ajustement_transmittance_ordre2_passe_haut(f, T)`
+`ajustement_ordre1_passe_haut_dephasage(f, phi)`
 
-`ajustement_transmittance_ordre2_passe_bande(f, T)`
 
-`ajustement_gain_ordre2_passe_bande(f, G)`
+
+`ajustement_ordre2_passe_bas_transmittance(f, T)`
+
+`ajustement_ordre2_passe_haut_transmittance(f, T)`
+
+`ajustement_ordre2_passe_bande_transmittance(f, T)`
+
+`ajustement_ordre2_passe_bande_gain(f, G)`
 
 ### > Exemple
 
@@ -82,8 +84,6 @@ plt.show()
 ```
 
 ![](https://david-therincourt.fr/python/pypi-physique/exemple_1.png)
-
-L'option `plot_ax` trace la courbe du modèle dans le repère (`axes`) indiqué. L'étiquette (`label`) du modèle donne le résultat de la modélisation dans la légende !
 
 ---
 

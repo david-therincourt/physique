@@ -127,7 +127,7 @@ def exponentielle2_croissante(x, *args):
     A, k = args
     return A*(1-np.exp(-k*x))
 
-def exponentielle2_croissante_x0(x, *args):
+def exponentielle2_croissante_retard(x, *args):
     """
     Fonction exponentielle croissante du type y = A*(1-exp(-k*(x-x0)))
 
@@ -159,7 +159,7 @@ def exponentielle2_decroissante(x, *args):
     A, k = args
     return A*np.exp(-k*x)
 
-def exponentielle2_decroissante_x0(x, *args):
+def exponentielle2_decroissante_retard(x, *args):
     """
     Fonction exponentielle décroissante du type y = A*exp(-k*(x-x0)))
 
@@ -176,8 +176,13 @@ def exponentielle2_decroissante_x0(x, *args):
     return A*np.exp(-k*(x-x0))
 
 
+def puissance(x, *args):
+    A, n = args
+    return A*x**n
+
+
 ############## Ordre 1 - Passe-bas  ################
-def transmittance_ordre1_passe_bas(f, *args):
+def ordre1_passe_bas_transmittance(f, *args):
     """
     Fonction transmittance d'un système d'ordre 1 passe-bas
 
@@ -193,7 +198,7 @@ def transmittance_ordre1_passe_bas(f, *args):
     return T0/np.sqrt(1+(f/f0)**2)
 
 
-def gain_ordre1_passe_bas(f, *args):
+def ordre1_passe_bas_gain(f, *args):
     """
     Fonction gain d'un système d'ordre 1 passe-bas
 
@@ -210,7 +215,7 @@ def gain_ordre1_passe_bas(f, *args):
     G0, f0 = args
     return G0 - 20*np.log10(np.sqrt(1+(f/f0)**2))
 
-def dephasage_ordre1_passe_bas(f, *args):
+def ordre1_passe_bas_dephasage(f, *args):
     """
     Fonction déphasage d'un système d'ordre 1 passe-bas
 
@@ -228,7 +233,7 @@ def dephasage_ordre1_passe_bas(f, *args):
 
 
 ############## Ordre 1 - Passe-haut  ################
-def transmittance_ordre1_passe_haut(f, *args):
+def ordre1_passe_haut_transmittance(f, *args):
     """
     Fonction transmittance d'un système d'ordre 1 passe-haut.
 
@@ -244,7 +249,7 @@ def transmittance_ordre1_passe_haut(f, *args):
     return T0*(f/f0)/np.sqrt(1+(f/f0)**2)
 
 
-def gain_ordre1_passe_haut(f, *args):
+def ordre1_passe_haut_gain(f, *args):
     """
     Fonction gain d'un système d'ordre 1 passe-haut.
 
@@ -262,7 +267,7 @@ def gain_ordre1_passe_haut(f, *args):
     return G0 + 20*np.log10(f/f0) - 20*np.log10(np.sqrt(1+(f/f0)**2))
 
 
-def dephasage_ordre1_passe_haut(f, ):
+def ordre1_passe_haut_dephasage(f, ):
     """
     Fonction déphasage d'un système d'ordre 1 passe-haut.
 
@@ -282,7 +287,7 @@ def dephasage_ordre1_passe_haut(f, ):
 
 
 ############## Ordre 2 - Passe-bas  ################
-def transmittance_ordre2_passe_bas(f, *args):
+def ordre2_passe_bas_transmittance(f, *args):
     """
     Fonction transmittance d'un système d'ordre 2 passe bas.
 
@@ -298,7 +303,7 @@ def transmittance_ordre2_passe_bas(f, *args):
     T0, f0, m = args
     return T0/np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2)
 
-def gain_ordre2_passe_bas(f, *args):
+def ordre2_passe_bas_gain(f, *args):
     """
     Fonction gain d'un système d'ordre 2 passe bas.
 
@@ -315,7 +320,7 @@ def gain_ordre2_passe_bas(f, *args):
     return G0 - 20*np.log10(np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2))
 
 
-def dephasage_ordre2_passe_bas(f, *args):
+def ordre2_passe_bas_dephasage(f, *args):
     """
     Fonction déphasage d'un système d'ordre 2 passe bas.
 
@@ -332,7 +337,7 @@ def dephasage_ordre2_passe_bas(f, *args):
 
 
 ############## Ordre 2 - Passe-haut  ################
-def transmittance_ordre2_passe_haut(f, *args):
+def ordre2_passe_haut_transmittance(f, *args):
     """
     Fonction transmittance d'un système d'ordre 2 passe-haut.
 
@@ -349,7 +354,7 @@ def transmittance_ordre2_passe_haut(f, *args):
     return -T0*(f/f0)**2/np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2)
 
 
-def gain_ordre2_passe_haut(f, *args):
+def ordre2_passe_haut_gain(f, *args):
     """
     Fonction gain d'un système d'ordre 2 passe-haut.
 
@@ -367,7 +372,7 @@ def gain_ordre2_passe_haut(f, *args):
     return G0 + 20*np.log10((f/f0)**2) - 20*np.log10(np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2))
 
 
-def dephasage_ordre2_passe_haut(f, *args):
+def ordre2_passe_haut_dephasage(f, *args):
     """
     Fonction déphasage d'un système d'ordre 2 passe-haut.
 
@@ -385,7 +390,7 @@ def dephasage_ordre2_passe_haut(f, *args):
 
 
 ############## Ordre 2 - Passe-bande  ################
-def transmittance_ordre2_passe_bande(f, *args):
+def ordre2_passe_bande_transmittance(f, *args):
     """
     Fonction transmittance d'un système d'ordre 2 passe-bande.
 
@@ -402,7 +407,7 @@ def transmittance_ordre2_passe_bande(f, *args):
     return T0*2*m*(f/f0)/np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2)
 
 
-def gain_ordre2_passe_bande(f, *args):
+def ordre2_passe_bande_gain(f, *args):
     """
     Fonction gain d'un système d'ordre 2 passe-bande.
 
@@ -420,7 +425,7 @@ def gain_ordre2_passe_bande(f, *args):
     return G0 + 20*np.log10(2*m*f/f0) - 20*np.log10(np.sqrt((1-(f/f0)**2)**2+(2*m*f/f0)**2))
 
 
-def dephasage_ordre2_passe_bande(f, *args):
+def ordre2_passe_bande_dephasage(f, *args):
     """
     Fonction déphasage d'un système d'ordre 2 passe-bande.
 

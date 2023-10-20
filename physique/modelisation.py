@@ -11,15 +11,14 @@ from physique.fonctions import *
 class Modele():
     def __init__(self, function, xlim, popt, pcov, infos_dic):
         self._function = function
-        self._xmin = xlim[0]
-        self._xmax = xlim[1]
+        self._xmin, self._xmax = xlim
         self._popt = popt
         self._pcov = pcov
         self._infos_dic = infos_dic
         self._nb_pts = 200
         self._nb_round = 5
-        self._plot_label_latex = self._infos_dic['plot_label_latex']
         self._plot_label = None
+        self._plot_label_latex = self._infos_dic['plot_label_latex']
         self._x = None
         self._y = None
         self._update_label()
@@ -84,7 +83,7 @@ class Modele():
     def get_label_latex(self):
         return self._plot_label_latex
     
-    def set_label_latex(self, val):
+    def set_label_latex(self, val:bool):
         self._plot_label_latex = val
         self._update_label()
 
@@ -115,25 +114,29 @@ class Modele():
             line = ax.plot(self._x, self._y, *args, label=self._plot_label, **kargs)
         return line[0]
     
+
+
+
+
     
+###########################################################
+#              FONCTIONS CLASSIQUES                       #
+###########################################################
     
 # Ajustement suivant une fonction linéaire
 def ajustement_lineaire(x, y, borne_inf=None, borne_sup=None, k0=1):
     
     x, y, xlim = reduire(x, y, borne_inf, borne_sup)
-
-    popt, pcov  = curve_fit(lineaire, x, y, p0=[k0])
-    
+    popt, pcov  = curve_fit(lineaire, x, y, p0=[k0])  
     infos_dic = {
         'method'          : 'scipy.optimize.curve_fit',
         'function'        : 'Modélisation suivant une fonction linéaire',
         'expression_text' : 'y = k*x',
         'expression_latex': r"$y=k\cdot x$",
         'popt_names_text' : ['k'],
-        'popt_names_latex': [r'$k$'],
+        'popt_names_latex': ['$k$'],
         'plot_label_latex': True
         }
-
     return Modele(lineaire, xlim, popt, pcov, infos_dic)
 
 
@@ -141,19 +144,16 @@ def ajustement_lineaire(x, y, borne_inf=None, borne_sup=None, k0=1):
 def ajustement_affine(x, y, borne_inf=None, borne_sup=None, a0=1, b0=1):
 
     x, y, xlim = reduire(x, y, borne_inf, borne_sup)
-
     popt, pcov  = curve_fit(affine, x, y, p0=[a0, b0])
-
     infos_dic = {
         'method'          : 'scipy.optimize.curve_fit',
         'function'        : 'Modélisation suivant une fonction affine',
         'expression_text' : 'y = a*x + b',
-        'expression_latex': r'$y=a \cdot x + b$',
+        'expression_latex': r'$y=a\cdot x + b$',
         'popt_names_text' : ['a', 'b'],
-        'popt_names_latex': [r'$a$', r'$b$'],
+        'popt_names_latex': ['$a$', '$b$'],
         'plot_label_latex': True
         }
-
     return Modele(affine, xlim, popt, pcov, infos_dic)
 
 
@@ -162,126 +162,106 @@ def ajustement_affine(x, y, borne_inf=None, borne_sup=None, a0=1, b0=1):
 def ajustement_parabolique(x, y, borne_inf=None, borne_sup=None, a0=1, b0=1, c0=1):
 
     x, y, xlim = reduire(x, y, borne_inf, borne_sup)
-
     popt, pcov  = curve_fit(parabole, x, y, p0=[a0, b0, c0])
-    
     infos_dic = {
         'method'          : 'scipy.optimize.curve_fit',
         'function'        : 'Modélisation suivant une fonction parabolique',
         'expression_text' : 'y = a*x^2 + b*x + c',
         'expression_latex': r"$y=a\cdot x^2+b\cdot x+c$",
         'popt_names_text' : ['a', 'b', 'c'],
-        'popt_names_latex': [r'$a$', r'$b$', r'$c$'],
+        'popt_names_latex': ['$a$', '$b$', '$c$'],
         'plot_label_latex': True
         }
-
     return Modele(parabole, xlim, popt, pcov, infos_dic)
 
 
 
 
-# # Ajustement suivant une fonction exponentielle croissante
-# def ajustement_exponentielle_croissante(x, y, borne_inf=None, borne_sup=None, p0:"list"=[1,1]):
-    
-#     global n
-    
-#     x, y, inf, sup = reduire(x, y, borne_inf, borne_sup)
+# Ajustement suivant une fonction exponentielle croissante
+def ajustement_exponentielle_croissante(x, y, borne_inf=None, borne_sup=None, A0=1, tau0=1):
 
-#     (A,tau), pcov  = curve_fit(exponentielle_croissante, x, y, p0=p0)
-    
-#     text = "y = A*(1-exp(-x/tau))" + "\n" + "A=" + pround_str(A,n) + "  tau=" + pround_str(tau,n)
-#     latex = r"$y=A\cdot(1-e^{-x/\tau})$"+ "\n" + r"$A=$" + pround_str(A,n) + r"  $\tau=$" + pround_str(tau,n)
-
-#     return Modele((x, y), (inf, sup), "scipy.optimize.curve_fit", exponentielle_croissante, (A,tau), pcov, (text, latex))
-
-
-# # Ajustement suivant une fonction exponentielle croissante translatée
-# def ajustement_exponentielle_croissante_x0(x, y, borne_inf=None, borne_sup=None, p0:"list"=[1,1,1]):
-    
-#     global n
-    
-#     x, y, inf, sup = reduire(x, y, borne_inf, borne_sup)
-
-#     (A,tau,x0), pcov  = curve_fit(exponentielle_croissante_x0, x, y, p0=p0)
-    
-#     text = "y = A*(1-exp(-(x-x0)/tau))" + "\n" + "A=" + pround_str(A,n) + "  tau=" + pround_str(tau,n)+ "  x0=" + pround_str(x0,n)
-#     latex = r"$y=A\cdot(1-e^{-(x-x_0)/\tau})$"+ "\n" + r"$A=$" + pround_str(A,n) + r"  $\tau=$" + pround_str(tau,n) + r"  $x_0=$" + pround_str(x0,n)
-
-#     return Modele((x, y), (inf, sup), "scipy.optimize.curve_fit", exponentielle_croissante_x0, (A,tau,x0), pcov, (text, latex))
+    x, y, xlim = reduire(x, y, borne_inf, borne_sup)
+    popt, pcov  = curve_fit(exponentielle_croissante, x, y, p0=[A0, tau0])
+    infos_dic = {
+        'method'          : 'scipy.optimize.curve_fit',
+        'function'        : 'Modélisation suivant une fonction exponentielle croissante',
+        'expression_text' : 'y = A*(1-exp(-x/tau))',
+        'expression_latex': r'$y=A\cdot(1-e^{-x/\tau})$',
+        'popt_names_text' : ['A', 'tau'],
+        'popt_names_latex': ['$A$', r'$\tau$'],
+        'plot_label_latex': True
+        }
+    return Modele(exponentielle_croissante, xlim, popt, pcov, infos_dic)
 
 
+def ajustement_exponentielle_decroissante(x, y, borne_inf=None, borne_sup=None, A0=1, tau0=1):
+
+    x, y, xlim = reduire(x, y, borne_inf, borne_sup)
+    popt, pcov  = curve_fit(exponentielle_decroissante, x, y, p0=[A0, tau0])
+    infos_dic = {
+        'method'          : 'scipy.optimize.curve_fit',
+        'function'        : 'Modélisation suivant une fonction exponentielle décroissante',
+        'expression_text' : 'y = A*exp(-x/tau)',
+        'expression_latex': r'$y=A\cdot e^{-x/\tau}$',
+        'popt_names_text' : ['A', 'tau'],
+        'popt_names_latex': ['$A$', r'$\tau$'],
+        'plot_label_latex': True
+        }
+    return Modele(exponentielle_decroissante, xlim, popt, pcov, infos_dic)
 
 
-# # Ajustement suivant une fonction exponentielle décroissante
-# def ajustement_exponentielle_decroissante(x, y, borne_inf=None, borne_sup=None, p0:"list"=[1,1]):
-    
-#     global n
-    
-#     x, y, inf, sup = reduire(x, y, borne_inf, borne_sup)
+def ajustement_exponentielle2_croissante(x, y, borne_inf=None, borne_sup=None, A0=1, k0=1):
 
-#     (A,tau), pcov  = curve_fit(exponentielle_decroissante, x, y, p0=p0)
-    
-#     text = "y = A*exp(-x/tau)" + "\n" + "A=" + pround_str(A,n) + "  tau=" + pround_str(tau,n)
-#     latex = r"$y=A\cdot e^{-x/\tau}$"+ "\n" + r"$A=$" + pround_str(A,n) + r"  $\tau=$" + pround_str(tau,n)
-
-#     return Modele((x, y), (inf, sup), "scipy.optimize.curve_fit", exponentielle_decroissante, (A,tau), pcov, (text, latex))
-
-
-# # # Ajustement suivant une fonction exponentielle décroissante translatée
-# # def ajustement_exponentielle_decroissante_x0(x, y, borne_inf=None, borne_sup=None, A_p0:"float"=1, tau_p0:"float"=1, x0_p0:"float"=0):
-
-# #     global n
-# #     x, y, borne_inf, borne_sup= reduire(x, y, borne_inf, borne_sup)
-# #     (A,tau,x0), pcov  = curve_fit(exponentielle_decroissante_x0, x, y, p0=[A_p0, tau_p0, x0_p0])
-
-# #     text = "y = A*exp(-(x-x0)/tau)" + "\n" + "A=" + pround_str(A,n) + "  tau=" + pround_str(tau,n)+ "  x0=" + pround_str(x0,n)
-# #     latex = r"$y=A\cdot e^{-(x-x_0)/\tau}$"+ "\n" + r"$A=$" + pround_str(A,n) + r"  $\tau=$" + pround_str(tau,n) + r"  $x_0=$" + pround_str(x0,n)
-
-# #     return Modele(x, y, borne_inf, borne_sup, exponentielle_decroissante_x0, (A,tau,x0), pcov, (text, latex))
+    x, y, xlim = reduire(x, y, borne_inf, borne_sup)
+    popt, pcov  = curve_fit(exponentielle2_croissante, x, y, p0=[A0, k0])
+    infos_dic = {
+        'method'          : 'scipy.optimize.curve_fit',
+        'function'        : 'Modélisation suivant une fonction exponentielle croissante',
+        'expression_text' : 'y = A*(1-exp(-k*x))',
+        'expression_latex': r'$y=A\cdot(1-e^{-k\cdot x})$',
+        'popt_names_text' : ['A', 'k'],
+        'popt_names_latex': ['$A$', '$k$'],
+        'plot_label_latex': True
+        }
+    return Modele(exponentielle2_croissante, xlim, popt, pcov, infos_dic)
 
 
+def ajustement_exponentielle2_decroissante(x, y, borne_inf=None, borne_sup=None, A0=1, k0=1):
 
-# # Ajustement suivant une fonction exponentielle 2 croissante
-# def ajustement_exponentielle2_croissante(x, y, borne_inf=None, borne_sup=None, p0:"list"=[1,1]):
-    
-#     global n
-#     x, y, inf, sup = reduire(x, y, borne_inf, borne_sup)
-
-#     (A,k), pcov  = curve_fit(exponentielle2_croissante, x, y, p0=p0)
-    
-#     text = "y = A*(1-exp(-k*x))" + "\n" + "A=" + pround_str(A,n) + "  k=" + pround_str(k,n)
-#     latex = r"$y=A\cdot(1-e^{-k\cdot x})$"+ "\n" + r"$A=$" + pround_str(A,n) + r"  $k=$" + pround_str(k,n)
-
-#     return Modele((x, y), (inf, sup), "scipy.optimize.curve_fit", exponentielle2_croissante, (A,k), pcov, (text, latex))
-
-
-# # Ajustement suivant une fonction exponentielle croissante translatée
-# def ajustement_exponentielle2_croissante_x0(x, y, borne_inf=None, borne_sup=None, p0:"list"=[1,1,1]):
-    
-#     global n
-    
-#     x, y, inf, sup = reduire(x, y, borne_inf, borne_sup)
-
-#     (A,k,x0), pcov  = curve_fit(exponentielle2_croissante_x0, x, y, p0=p0)
-    
-#     text = "y = A*(1-exp(-k*(x-x0)))" + "\n" + "A=" + pround_str(A,n) + "  k=" + pround_str(k,n)+ "  x0=" + pround_str(x0,n)
-#     latex = r"$y=A\cdot(1-e^{-k\dot(x-x_0)})$"+ "\n" + r"$A=$" + pround_str(A,n) + r"  $k=$" + pround_str(k,n) + r"  $x_0=$" + pround_str(x0,n)
-
-#     return Modele((x, y), (inf, sup), "scipy.optimize.curve_fit", exponentielle2_croissante_x0, (A,k,x0), pcov, (text, latex))
+    x, y, xlim = reduire(x, y, borne_inf, borne_sup)
+    popt, pcov  = curve_fit(exponentielle2_decroissante, x, y, p0=[A0, k0])
+    infos_dic = {
+        'method'          : 'scipy.optimize.curve_fit',
+        'function'        : 'Modélisation suivant une fonction exponentielle décroissante',
+        'expression_text' : 'y = A*exp(-k*x)',
+        'expression_latex': r'$y=A\cdot e^{-k\cdot x}$',
+        'popt_names_text' : ['A', 'k'],
+        'popt_names_latex': ['$A$', '$k$'],
+        'plot_label_latex': True
+        }
+    return Modele(exponentielle2_decroissante, xlim, popt, pcov, infos_dic)
 
 
 
+def ajustement_puissance(x, y, borne_inf=None, borne_sup=None, A0=1, n0=1):
 
-# # Ajustement suivant une fonction exponentielle décroissante
-# def ajustement_exponentielle2_decroissante(x, y, borne_inf=None, borne_sup=None, p0:"list"=[1,1]):
-    
-#     global n
-    
-#     x, y, inf, sup = reduire(x, y, borne_inf, borne_sup)
+    x, y, xlim = reduire(x, y, borne_inf, borne_sup)
+    popt, pcov  = curve_fit(puissance, x, y, p0=[A0, n0])
+    infos_dic = {
+        'method'          : 'scipy.optimize.curve_fit',
+        'function'        : 'Modélisation suivant une fonction puissance',
+        'expression_text' : 'y = A*x^n',
+        'expression_latex': r'$y=A\cdot x^n$',
+        'popt_names_text' : ['A', 'n'],
+        'popt_names_latex': ['$A$', '$n$'],
+        'plot_label_latex': True
+        }
+    return Modele(puissance, xlim, popt, pcov, infos_dic)
 
-#     (A,k), pcov  = curve_fit(exponentielle2_decroissante, x, y, p0=p0)
-    
-#     text = "y = A*exp(-k*x)" + "\n" + "A=" + pround_str(A,n) + "  k=" + pround_str(k,n)
-#     latex = r"$y=A\cdot e^{-k\cdot x}$"+ "\n" + r"$A=$" + pround_str(A,n) + r"  $k=$" + pround_str(k,n)
 
-#     return Modele((x, y), (inf, sup), "scipy.optimize.curve_fit", exponentielle2_decroissante, (A,k), pcov, (text, latex))
+###########################################################
+#                       FILTRES                           #
+###########################################################
+
+
+
