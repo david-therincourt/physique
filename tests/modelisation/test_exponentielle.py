@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sun May 26 15:46:31 2019
-@author: david
-"""
-
 import numpy as np
 import matplotlib.pyplot as plt
 from physique.modelisation import *
@@ -33,7 +26,10 @@ y = [0.,3.935,6.321,7.769,8.647,9.179,9.502,9.698,9.817,9.889]
 #y = [0,5.15,39.8,134,322,624,1078,1710,2563,3640]
 
 modele = ajustement_exponentielle_croissante(x,y)
+modele.set_print_error(True)
+modele.set_xmax(15)
 print(modele)
+
 
 
 plt.plot(x, y, '+r', label="Mesures")

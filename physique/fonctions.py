@@ -333,7 +333,12 @@ def ordre2_passe_bas_dephasage(f, *args):
         phi en degré (float)
     """
     f0, m = args
-    return -np.arctan((2*m*f/f0)/(1-(f/f0)**2))*180/np.pi
+
+    f1 = f[np.where(f<=f0)]
+    phi1 = - np.arctan((2*m*f1/f0)/(1-(f1/f0)**2))*180/np.pi
+    f2 = f[np.where(f>f0)]
+    phi2 = -180 - np.arctan((2*m*f2/f0)/(1-(f2/f0)**2))*180/np.pi  # -180 car Im < 0
+    return np.concatenate((phi1, phi2))
 
 
 ############## Ordre 2 - Passe-haut  ################
@@ -386,7 +391,12 @@ def ordre2_passe_haut_dephasage(f, *args):
         phi en degré (float)
     """
     f0, m = args
-    return 180 - np.arctan((2*m*f/f0)/(1-(f/f0)**2))*180/np.pi
+
+    f1 = f[np.where(f<=f0)]
+    phi1 = 180 - np.arctan((2*m*f1/f0)/(1-(f1/f0)**2))*180/np.pi
+    f2 = f[np.where(f>f0)]
+    phi2 = -np.arctan((2*m*f2/f0)/(1-(f2/f0)**2))*180/np.pi      # -180 car Im < 0
+    return np.concatenate((phi1, phi2))
 
 
 ############## Ordre 2 - Passe-bande  ################
@@ -439,4 +449,11 @@ def ordre2_passe_bande_dephasage(f, *args):
         phi en degré (float)
     """
     f0, m = args
-    return 90 - np.arctan((2*m*f/f0)/(1-(f/f0)**2))*180/np.pi # Problème décalage pour f=f0
+
+    f1 = f[np.where(f<=f0)]
+    phi1 = 90 - np.arctan((2*m*f1/f0)/(1-(f1/f0)**2))*180/np.pi
+    f2 = f[np.where(f>f0)]
+    phi2 = -90 - np.arctan((2*m*f2/f0)/(1-(f2/f0)**2))*180/np.pi   # -180 car Im < 0
+    return np.concatenate((phi1, phi2))
+    
+    

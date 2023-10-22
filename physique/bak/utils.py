@@ -30,36 +30,29 @@ import numpy as np
 from math import log10
 
 
-def pround(x, n):
-    """ Convertit un flottant en une chaîne de caractères avec n chiffres significatifs.
-    Paramètres :
-    x (float) : valeur à convertir
-    n (int)   : nombre de chiffres significatifs
-
-    Retourne :
-    Valeur arrondie (str)
+def pround_str(x, n):
+    """ Convertit un flottant en une chaîne de caractères avec n chiffres significatifs. 
     """
     x = float(x)
     x0 = abs(x)
     
-    if x0<0.01:
+    if x0<1:
+        p = int(log10(x0))
+        print(p)
         ch = "{:." + str(n-1) + "e}"
         x_str = ch.format(x)
         
-    if 0.01<=x0<1:
-        ch = "{:." + str(n) + "g}"
-        x_str = ch.format(x)
-        if x_str=='1':
-            if n>1:
-                x_str += "."
-                x_str += "0"*(n-1)
-            return x_str
-        else:
-            m = x_str.split('.')[-1]
-            nx = len(m.split('0')[-1])
-            if nx<n:
-                x_str += "0"*(n-nx)
-                return x_str
+#     if 0.01<=x0<1:
+#         p = int(log10(x0))
+#         x_str = str(round(x, n-p))
+#         print(x_str)
+#         t = x_str.split(".")
+#         a = t[0]              # 0 ou 1
+#         print(a)
+#         t = t[1].split("0")
+#         nx = len(t[-1])
+#         if nx<n and a != 1:
+#             x_str += "0"*(n-nx)
             
     if 1<=x0<10000:
         p = int(log10(x0))
